@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東</title>
+    <title>社會住宅綜合試算系統 鎮信/安東3.0</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -144,11 +144,11 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統3.0</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="toolbar">
-    <button class="print-btn" onclick="window.print()">🖨️ 開始列印 (精簡 A4 三分頁格式)</button>
+    <button class="print-btn" onclick="window.print()">🖨️ 列印 </button>
     <button class="reset-btn" onclick="resetAllFields()">🔄 清空重置所有欄位</button>
 </div>
 
@@ -160,7 +160,7 @@
                 <div class="section-title">第一部分：建物面積與租金評定</div>
                 
                 <button class="drawer-btn" onclick="toggleDrawer()">
-                    <span>衡量工具：謄本面積換算 (此區塊列印時自動獨立為第一頁)</span><span id="drawerArrow">▼</span>
+                    <span>謄本面積換算</span><span id="drawerArrow">▼</span>
                 </button>
                 
                 <div id="areaCalculator">
@@ -186,10 +186,10 @@
                     <div class="area-summary-box">
                         <div class="area-summary-item">專有面積(m²) <span id="outPri">0</span></div>
                         <div class="area-summary-item">公設面積(m²) <span id="outPub">0</span></div>
-                        <div class="area-summary-item" style="border-top: 1px dashed #feb2b2; padding-top:5px;">總坪數(未扣除車位) <span id="outTotalPing">0</span></div>
+                        <div class="area-summary-item" style="border-top: 1px dashed #feb2b2; padding-top:5px;">未扣除車位總坪數 <span id="outTotalPing">0</span></div>
                         <div class="area-summary-item" style="border-top: 1px dashed #feb2b2; padding-top:5px;">車位坪數 <span id="outCarPing">0</span></div>
                         <div class="area-summary-item" style="grid-column: span 2; border-top: 1px solid #feb2b2; padding-top:5px;">
-                            扣除車位後總坪數 <span id="outPing" style="font-size:1.4rem;">0</span>
+                            扣除車位總坪數 <span id="outPing" style="font-size:1.4rem;">0</span>
                         </div>
                     </div>
                     <button class="btn-apply" onclick="applyArea()">帶入下方計算坪數</button>
