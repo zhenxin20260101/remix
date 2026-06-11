@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東3.6</title>
+    <title>社會住宅綜合試算系統 鎮信/安東3.61</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -113,9 +113,9 @@
                 background: transparent !important; 
                 color: #000 !important; 
                 box-shadow: none !important;
-                height: 26px !important; /* 降低高度 */
+                height: 26px !important; 
                 padding: 0 !important;
-                margin-bottom: 4px !important; /* 壓縮垂直間距 */
+                margin-bottom: 4px !important; 
             }
             .member-header input { border-bottom: none !important; font-weight: bold; font-weight: 800; font-size: 1.1rem; }
             label { margin-bottom: 2px !important; font-size: 0.8rem !important; }
@@ -127,7 +127,7 @@
                 justify-content: flex-end !important; 
                 margin-top: 4px !important;
                 padding: 6px 12px !important;
-                background: transparent !important; /* 去除滿版底色，符合右靠視覺 */
+                background: transparent !important; 
                 font-size: 11pt !important;
             }
             .qualification-result.pass { color: var(--success-text) !important; font-weight: bold; }
@@ -162,7 +162,7 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統3.6</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統3.61</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="toolbar">
@@ -247,8 +247,7 @@
             
             <div class="section tenant-section" id="webTenantSection">
                 <div class="section-title">第二部分：房客家庭成員資料登打</div>
-                <div id="familyContainer">
-                    </div>
+                <div id="familyContainer"></div>
                 <button class="add-btn" onclick="addFamilyMember()">➕ 新增家庭成員 / 共同承租人</button>
             </div>
         </div>
@@ -307,7 +306,7 @@ const masterData = {
         "龜山區": { "整層": [855,840,825,805,785,760,740,710,675], "套房": [1225,1205,1185,1155,1125,1095,1065,1020,970] },
         "蘆竹區": { "整層": [745,735,720,705,685,665,645,620,590], "套房": [1180,1160,1140,1110,1080,1050,1020,980,935] },
         "八德區": { "整層": [735,720,710,690,675,655,635,610,580], "套房": [1045,1030,1010,985,960,935,905,870,830] },
-        "平鎮區": { "整層": [720,710,700,680,660,645,625,600,570], "套房": [900,885,870,850,830,805,780,750,715] },
+        "平鎮區": { "整層": [720,710,700,680,660,645,625,600,570], "套房": [900,885,715,850,830,805,780,750,715] },
         "大園區": { "整層": [735,720,710,690,675,655,635,610,580], "套房": [1045,1030,1010,985,960,935,905,870,830] },
         "觀音區": { "整層": [700,685,775,660,640,625,605,580,555], "套房": [900,885,870,850,830,805,780,750,715] },
         "楊梅區": { "整層": [615,605,595,580,565,550,535,510,485], "套房": [830,815,805,780,760,740,720,690,660] },
@@ -376,6 +375,7 @@ function calcAgeByDate() {
         if (!isNaN(buildYearRoc) && !isNaN(buildMonth) && !isNaN(buildDay)) {
             let finalAge = (new Date().getFullYear()) - (buildYearRoc + 1911);
             if ((new Date().getMonth() + 1) < buildMonth || ((new Date().getMonth() + 1) === buildMonth && new Date().getDate() < buildDay)) finalAge--;
+            // 修正：確實將防呆修正後的屋齡帶回網頁欄位中
             document.getElementById('age').value = Math.max(0, finalAge);
             calculateAll();
         }
