@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東3.61</title>
+    <title>社會住宅綜合試算系統 鎮信/安東3.8</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -68,9 +68,10 @@
         
         /* 謄本換算表格 */
         #areaCalculator { display: none; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 15px; }
-        .calc-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        .calc-table th, .calc-table td { padding: 6px; border: 1px solid #e2e8f0; text-align: center; }
+        .calc-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .calc-table th, .calc-table td { padding: 8px; border: 1px solid #e2e8f0; text-align: center; }
         .calc-table input { height: 32px; border-width: 1px; color: var(--danger-text); text-align: center; margin-bottom: 0; padding: 0 5px; }
+        .empty-cell { background-color: #f8fafc; color: #94a3b8; font-size: 0.8rem; }
         
         .area-summary-box { background: #fff5f5; padding: 12px; border-radius: 10px; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 1px solid #feb2b2; }
         .area-summary-item { font-size: 0.8rem; font-weight: bold; }
@@ -97,7 +98,7 @@
         .stamp.pass { color: var(--success-text); border-color: var(--success-text); }
         .stamp.fail { color: var(--danger-text); border-color: var(--danger-text); }
         
-        /* 🖨️ 縮減列高與符合標準靠右優化樣式 */
+        /* 🖨️ 列印優化樣式 */
         @media print {
             html, body { background: white; color: #000; padding: 0; font-size: 11pt; }
             button, .drawer-btn, .add-btn, .toolbar, .delete-member-btn, .member-calc-hint, .inner-add-btn, .inner-del-btn { display: none !important; }
@@ -105,7 +106,6 @@
             .main-grid, .result-side { display: block !important; }
             .result-sticky { position: relative !important; top: 0 !important; }
             
-            /* 調整 2：大幅壓縮出租人、承租人的元件高度與列高 */
             input, select { 
                 border: none !important; 
                 border-bottom: 1px solid #000 !important; 
@@ -117,11 +117,15 @@
                 padding: 0 !important;
                 margin-bottom: 4px !important; 
             }
-            .member-header input { border-bottom: none !important; font-weight: bold; font-weight: 800; font-size: 1.1rem; }
+            
+            /* 【優化 4】：維持姓名與身分證字號輸入框在列印時的基本寬度，防止底線過短縮水 */
+            .p-name { display: inline-block !important; width: 120px !important; text-align: left !important; }
+            .p-id { display: inline-block !important; width: 160px !important; text-align: left !important; }
+
+            .member-header input { border-bottom: none !important; font-weight: 800; font-size: 1.1rem; }
             label { margin-bottom: 2px !important; font-size: 0.8rem !important; }
             .form-row { margin-bottom: 0px !important; }
 
-            /* 調整 1：將房客三個符合標準的字樣強制往右邊靠攏 */
             .qualification-result { 
                 display: flex !important;
                 justify-content: flex-end !important; 
@@ -137,17 +141,21 @@
 
             /* --- 頁面 1：純謄本面積 --- */
             #areaCalculator { display: block !important; border: 1px solid #000 !important; page-break-after: always; padding: 10px !important; }
+            .empty-cell { color: transparent !important; background: transparent !important; }
             #landlordCoreInputs, #print_landlord_result, .tenant-section, #print_tenant_result { display: none !important; }
 
-            /* --- 頁面 2：房東租金核算（緊湊縮小版） --- */
+            /* --- 頁面 2：房東租金核算 --- */
             .print-page2-rent { display: block !important; page-break-before: always; page-break-after: always; }
 
-            /* --- 頁面 3：房客有值清單（緊湊縮小版） --- */
+            /* --- 頁面 3：房客有值清單 --- */
             .print-page3-tenant { display: block !important; page-break-before: always; }
             
             .section { box-shadow: none; border: 1px solid #000; margin-bottom: 10px; padding: 10px; }
             .sub-title { margin: 8px 0 4px 0 !important; font-size: 0.95rem !important; }
-            .member-card { border: 1px solid #000 !important; background: #fff !important; margin-bottom: 8px; padding: 8px; page-break-inside: avoid; border-left: 4px solid #000 !important; }
+            
+            /* 【優化 5】：確保任何一個共同承租人的卡片在列印時不會被攔腰截斷切到兩頁去 */
+            .member-card { border: 1px solid #000 !important; background: #fff !important; margin-bottom: 8px; padding: 8px; page-break-inside: avoid !important; border-left: 4px solid #000 !important; }
+            
             .member-grid { gap: 8px 12px; }
             .member-item { border: 1px solid #aaa !important; background: #fff !important; padding: 4px 8px; }
             .member-item > span { margin-bottom: 4px !important; font-size: 0.8rem !important; }
@@ -162,7 +170,7 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統3.61</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統3.8</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="toolbar">
@@ -185,12 +193,12 @@
                     <table class="calc-table">
                         <thead><tr><th>項目</th><th>面積(m²)</th><th>分母</th><th>分子</th></tr></thead>
                         <tbody>
-                            <tr><td>主建物</td><td><input type="number" id="mMain" value="0" oninput="runAreaCalc()"></td><td>1</td><td>1</td></tr>
-                            <tr><td>陽台</td><td><input type="number" id="mBal" value="0" oninput="runAreaCalc()"></td><td>1</td><td>1</td></tr>
-                            <tr><td>花台</td><td><input type="number" id="mFlower" value="0" oninput="runAreaCalc()"></td><td>1</td><td>1</td></tr>
-                            <tr><td>雨遮</td><td><input type="number" id="mRain" value="0" oninput="runAreaCalc()"></td><td>1</td><td>1</td></tr>
-                            <tr><td>平台</td><td><input type="number" id="mPlat" value="0" oninput="runAreaCalc()"></td><td>1</td><td>1</td></tr>
-                            <tr><td>其他</td><td><input type="number" id="mOth" value="0" oninput="runAreaCalc()"></td><td>1</td><td>1</td></tr>
+                            <tr><td>主建物</td><td><input type="number" id="mMain" value="0" oninput="runAreaCalc()"></td><td class="empty-cell">-</td><td class="empty-cell">-</td></tr>
+                            <tr><td>陽台</td><td><input type="number" id="mBal" value="0" oninput="runAreaCalc()"></td><td class="empty-cell">-</td><td class="empty-cell">-</td></tr>
+                            <tr><td>花台</td><td><input type="number" id="mFlower" value="0" oninput="runAreaCalc()"></td><td class="empty-cell">-</td><td class="empty-cell">-</td></tr>
+                            <tr><td>雨遮</td><td><input type="number" id="mRain" value="0" oninput="runAreaCalc()"></td><td class="empty-cell">-</td><td class="empty-cell">-</td></tr>
+                            <tr><td>平台</td><td><input type="number" id="mPlat" value="0" oninput="runAreaCalc()"></td><td class="empty-cell">-</td><td class="empty-cell">-</td></tr>
+                            <tr><td>其他</td><td><input type="number" id="mOth" value="0" oninput="runAreaCalc()"></td><td class="empty-cell">-</td><td class="empty-cell">-</td></tr>
                             <tr style="background:#f1f5f9;"><td colspan="4">共有部分 (公設持分)</td></tr>
                             <tr><td>公設 1</td><td><input type="number" id="mS1" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dS1" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nS1" value="0" oninput="runAreaCalc()"></td></tr>
                             <tr><td>公設 2</td><td><input type="number" id="mS2" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dS2" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nS2" value="0" oninput="runAreaCalc()"></td></tr>
@@ -210,7 +218,7 @@
                             扣除車位後總坪數 <span id="outPing" style="font-size:1.4rem;">0</span>
                         </div>
                     </div>
-                    <button class="btn-apply" onclick="applyArea()">帶入下方計算坪數</button>
+                    <div style="text-align: right;"><button class="btn-apply" onclick="applyArea()">將上方總坪數帶入下方試算</button></div>
                 </div>
 
                 <div id="landlordCoreInputs">
@@ -247,7 +255,8 @@
             
             <div class="section tenant-section" id="webTenantSection">
                 <div class="section-title">第二部分：房客家庭成員資料登打</div>
-                <div id="familyContainer"></div>
+                <div id="familyContainer">
+                    </div>
                 <button class="add-btn" onclick="addFamilyMember()">➕ 新增家庭成員 / 共同承租人</button>
             </div>
         </div>
@@ -306,7 +315,7 @@ const masterData = {
         "龜山區": { "整層": [855,840,825,805,785,760,740,710,675], "套房": [1225,1205,1185,1155,1125,1095,1065,1020,970] },
         "蘆竹區": { "整層": [745,735,720,705,685,665,645,620,590], "套房": [1180,1160,1140,1110,1080,1050,1020,980,935] },
         "八德區": { "整層": [735,720,710,690,675,655,635,610,580], "套房": [1045,1030,1010,985,960,935,905,870,830] },
-        "平鎮區": { "整層": [720,710,700,680,660,645,625,600,570], "套房": [900,885,715,850,830,805,780,750,715] },
+        "平鎮區": { "整層": [720,710,700,680,660,645,625,600,570], "套房": [900,885,870,850,830,805,780,750,715] },
         "大園區": { "整層": [735,720,710,690,675,655,635,610,580], "套房": [1045,1030,1010,985,960,935,905,870,830] },
         "觀音區": { "整層": [700,685,775,660,640,625,605,580,555], "套房": [900,885,870,850,830,805,780,750,715] },
         "楊梅區": { "整層": [615,605,595,580,565,550,535,510,485], "套房": [830,815,805,780,760,740,720,690,660] },
@@ -366,7 +375,13 @@ function runAreaCalc() {
     document.getElementById('outPing').innerText = finalPing.toFixed(2);
 }
 
-function applyArea() { document.getElementById('area').value = document.getElementById('outPing').innerText; toggleDrawer(); calculateAll(); }
+// 【優化 3】：強制加上 .toFixed(2)，防止浮點數除不盡跑出長尾數
+function applyArea() { 
+    const calculatedPing = parseFloat(document.getElementById('outPing').innerText || 0);
+    document.getElementById('area').value = calculatedPing.toFixed(2); 
+    toggleDrawer(); 
+    calculateAll(); 
+}
 
 function calcAgeByDate() {
     const s = document.getElementById('buildDate').value;
@@ -375,7 +390,6 @@ function calcAgeByDate() {
         if (!isNaN(buildYearRoc) && !isNaN(buildMonth) && !isNaN(buildDay)) {
             let finalAge = (new Date().getFullYear()) - (buildYearRoc + 1911);
             if ((new Date().getMonth() + 1) < buildMonth || ((new Date().getMonth() + 1) === buildMonth && new Date().getDate() < buildDay)) finalAge--;
-            // 修正：確實將防呆修正後的屋齡帶回網頁欄位中
             document.getElementById('age').value = Math.max(0, finalAge);
             calculateAll();
         }
@@ -390,6 +404,7 @@ function addFamilyMember() {
     let div = document.createElement("div");
     div.className = "member-card";
     div.id = "member_" + memberCounter;
+    // 為姓名與身分證字號綁定專屬 class 方便列印寬度管理
     div.innerHTML = `
         <div class="member-header">
             <input placeholder="家庭成員姓名" class="p-name">
@@ -468,7 +483,6 @@ function sumWrapper(card, wrapperClass) {
 
 // ------------------ 核心計算引擎與映射 ------------------
 function calculateAll() {
-    // 1. 房東核心計算
     const city = document.getElementById('city').value;
     const dist = document.getElementById('district').value;
     const type = document.getElementById('caseType').value;
@@ -499,7 +513,6 @@ function calculateAll() {
         box.innerText = "✅ 評定符合標準"; box.className = "status-box status-normal val-status"; rentBuildingOK = true; isLandlordInputted = true;
     }
 
-    // 2. 跨成員陣列加總與零值隱藏標記
     let totalAnnualIncome = 0, totalAsset = 0, totalProperty = 0;
     const memberCards = document.querySelectorAll("#familyContainer .member-card");
     let tenantCount = memberCards.length || 1;
@@ -543,9 +556,7 @@ function calculateAll() {
     else if (rentBuildingOK && incomeOK && assetOK && propertyOK) { stamp.style.display = "block"; stamp.className = "stamp pass"; stamp.innerText = "全案通過"; }
     else { stamp.style.display = "block"; stamp.className = "stamp fail"; stamp.innerText = "條件不符"; }
 
-    // ==========================================
-    // 🖨️ 同步映射第二與第三頁列印複製品
-    // ==========================================
+    // 同步第二頁鏡像
     document.getElementById('page2_inputs_mirror').innerHTML = document.getElementById('landlordCoreInputs').innerHTML;
     document.querySelector('.print-page2-rent select[id="city"]').value = city;
     document.querySelector('.print-page2-rent select[id="district"]').value = dist;
@@ -558,7 +569,7 @@ function calculateAll() {
     document.querySelector('.print-page2-rent input[id="rent"]').value = rent;
     document.getElementById('page2_result_mirror').innerHTML = document.getElementById('print_landlord_result').innerHTML;
 
-    // 同步第三頁
+    // 同步第三頁鏡像
     document.getElementById('page3_family_mirror').innerHTML = document.getElementById('familyContainer').innerHTML;
     const origInputs = document.querySelectorAll('#familyContainer input');
     const mirrorInputs = document.querySelectorAll('#page3_family_mirror input');
@@ -574,7 +585,6 @@ function showQualificationResult(element, ok, title, limit){
 
 function resetAllFields() {
     if(confirm("確定要清空目前畫面上所有的登打資料嗎？")) {
-        // 1. 重置房東核心資料
         document.getElementById('area').value = ""; 
         document.getElementById('buildDate').value = ""; 
         document.getElementById('age').value = "0"; 
@@ -582,7 +592,6 @@ function resetAllFields() {
         document.getElementById('adjLoc').value = "0"; 
         document.getElementById('adjDec').value = "0";
         
-        // 2. 修正：將謄本計算機的所有欄位通通回歸為 0
         document.getElementById("mMain").value = "0"; 
         document.getElementById("mBal").value = "0";
         document.getElementById("mFlower").value = "0"; 
@@ -591,16 +600,17 @@ function resetAllFields() {
         document.getElementById("mOth").value = "0"; 
         document.getElementById("mCar").value = "0";
         
-        // 3. 清空房客卡片，並重新只建 1 個乾淨的申請人
         document.getElementById("familyContainer").innerHTML = ""; 
         memberCounter = 0; 
         addFamilyMember(); 
         
-        // 4. 重新觸發即時計算，更新所有報表數據
         runAreaCalc(); 
         calculateAll();
     }
 }
+
+// 自動設定今天日期
+document.getElementById('today').innerText = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
 
 initDistricts(); addFamilyMember(); runAreaCalc(); calculateAll();
 </script>
