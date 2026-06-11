@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東3.2</title>
+    <title>社會住宅綜合試算系統 鎮信/安東3.3</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -97,7 +97,7 @@
         .stamp.pass { color: var(--success-text); border-color: var(--success-text); }
         .stamp.fail { color: var(--danger-text); border-color: var(--danger-text); }
         
-        /* 🖨️ 終極縮減優化：列印時全面轉為精緻扁平表單 */
+        /* 🖨️ 縮減列高與符合標準靠右優化樣式 */
         @media print {
             html, body { background: white; color: #000; padding: 0; font-size: 11pt; }
             button, .drawer-btn, .add-btn, .toolbar, .delete-member-btn, .member-calc-hint, .inner-add-btn, .inner-del-btn { display: none !important; }
@@ -105,7 +105,7 @@
             .main-grid, .result-side { display: block !important; }
             .result-sticky { position: relative !important; top: 0 !important; }
             
-            /* 輸入框與選單在列印時，去除立體框，改為乾淨報表底線 */
+            /* 調整 2：大幅壓縮出租人、承租人的元件高度與列高 */
             input, select { 
                 border: none !important; 
                 border-bottom: 1px solid #000 !important; 
@@ -113,29 +113,47 @@
                 background: transparent !important; 
                 color: #000 !important; 
                 box-shadow: none !important;
-                height: 30px !important;
+                height: 26px !important; /* 降低高度 */
                 padding: 0 !important;
+                margin-bottom: 4px !important; /* 壓縮垂直間距 */
             }
-            .member-header input { border-bottom: none !important; font-weight: bold; font-size: 1.1rem; }
+            .member-header input { border-bottom: none !important; font-weight: bold; font-weight: 800; font-size: 1.1rem; }
+            label { margin-bottom: 2px !important; font-size: 0.8rem !important; }
+            .form-row { margin-bottom: 0px !important; }
 
-            /* --- 核心自動隱藏防呆（大幅縮減第三頁垂直高度） --- */
+            /* 調整 1：將房客三個符合標準的字樣強制往右邊靠攏 */
+            .qualification-result { 
+                display: flex !important;
+                justify-content: flex-end !important; 
+                margin-top: 4px !important;
+                padding: 6px 12px !important;
+                background: transparent !important; /* 去除滿版底色，符合右靠視覺 */
+                font-size: 11pt !important;
+            }
+            .qualification-result.pass { color: var(--success-text) !important; font-weight: bold; }
+            .qualification-result.fail { color: var(--danger-text) !important; font-weight: bold; }
+
             .print-hide-item { display: none !important; }
 
             /* --- 頁面 1：純謄本面積 --- */
-            #areaCalculator { display: block !important; border: 1px solid #000 !important; page-break-after: always; }
+            #areaCalculator { display: block !important; border: 1px solid #000 !important; page-break-after: always; padding: 10px !important; }
             #landlordCoreInputs, #print_landlord_result, .tenant-section, #print_tenant_result { display: none !important; }
 
-            /* --- 頁面 2：房東租金核算與結果完美擠在同一頁 --- */
+            /* --- 頁面 2：房東租金核算（緊湊縮小版） --- */
             .print-page2-rent { display: block !important; page-break-before: always; page-break-after: always; }
 
-            /* --- 頁面 3：房客有值清單與結果完美擠在下一頁 --- */
+            /* --- 頁面 3：房客有值清單（緊湊縮小版） --- */
             .print-page3-tenant { display: block !important; page-break-before: always; }
             
-            .section { box-shadow: none; border: 1px solid #000; margin-bottom: 15px; padding: 15px; }
-            .member-card { border: 1px solid #555 !important; background: #fff !important; margin-bottom: 10px; padding: 10px; page-break-inside: avoid; border-left: 5px solid #000 !important; }
-            .member-grid { gap: 10px 15px; }
-            .member-item { border: 1px solid #aaa !important; background: #fff !important; padding: 6px; }
-            .result-card { border: 2px solid #000; background: white !important; padding: 12px; }
+            .section { box-shadow: none; border: 1px solid #000; margin-bottom: 10px; padding: 10px; }
+            .sub-title { margin: 8px 0 4px 0 !important; font-size: 0.95rem !important; }
+            .member-card { border: 1px solid #000 !important; background: #fff !important; margin-bottom: 8px; padding: 8px; page-break-inside: avoid; border-left: 4px solid #000 !important; }
+            .member-grid { gap: 8px 12px; }
+            .member-item { border: 1px solid #aaa !important; background: #fff !important; padding: 4px 8px; }
+            .member-item > span { margin-bottom: 4px !important; font-size: 0.8rem !important; }
+            .item-row input { height: 24px !important; }
+            .total-box { margin-top: 6px !important; padding: 8px !important; font-size: 1rem !important; }
+            .result-card { border: 2px solid #000; background: white !important; padding: 10px; }
             .stamp { position: absolute; top: 35%; opacity: 0.22; display: block !important; }
         }
 
@@ -144,11 +162,11 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統3.2</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統3.3</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="toolbar">
-    <button class="print-btn" onclick="window.print()">🖨️ 列印 </button>
+    <button class="print-btn" onclick="window.print()">🖨️ 開始列印</button>
     <button class="reset-btn" onclick="resetAllFields()">🔄 清空重置所有欄位</button>
 </div>
 
@@ -160,7 +178,7 @@
                 <div class="section-title">第一部分：建物面積與租金評定</div>
                 
                 <button class="drawer-btn" onclick="toggleDrawer()">
-                    <span>謄本面積換算</span><span id="drawerArrow">▼</span>
+                    <span>衡量工具：謄本面積換算</span><span id="drawerArrow">▼</span>
                 </button>
                 
                 <div id="areaCalculator">
@@ -186,10 +204,10 @@
                     <div class="area-summary-box">
                         <div class="area-summary-item">專有面積(m²) <span id="outPri">0</span></div>
                         <div class="area-summary-item">公設面積(m²) <span id="outPub">0</span></div>
-                        <div class="area-summary-item" style="border-top: 1px dashed #feb2b2; padding-top:5px;">未扣除車位總坪數 <span id="outTotalPing">0</span></div>
+                        <div class="area-summary-item" style="border-top: 1px dashed #feb2b2; padding-top:5px;">總坪數(未扣除車位) <span id="outTotalPing">0</span></div>
                         <div class="area-summary-item" style="border-top: 1px dashed #feb2b2; padding-top:5px;">車位坪數 <span id="outCarPing">0</span></div>
                         <div class="area-summary-item" style="grid-column: span 2; border-top: 1px solid #feb2b2; padding-top:5px;">
-                            扣除車位總坪數 <span id="outPing" style="font-size:1.4rem;">0</span>
+                            扣除車位後總坪數 <span id="outPing" style="font-size:1.4rem;">0</span>
                         </div>
                     </div>
                     <button class="btn-apply" onclick="applyArea()">帶入下方計算坪數</button>
@@ -214,7 +232,7 @@
                     <div class="form-row">
                         <div><label>區位調整率</label>
                             <select id="adjLoc" onchange="calculateAll()">
-                                <option value="0">中下區位 (0%)</option><option value="0.03">Ref 中上區位 (3%)</option><option value="0.05">優質區位 (5%)</option>
+                                <option value="0">中下區位 (0%)</option><option value="0.03">中上區位 (3%)</option><option value="0.05">優質區位 (5%)</option>
                             </select>
                         </div>
                         <div><label>裝修調整率</label>
@@ -291,7 +309,7 @@ const masterData = {
         "八德區": { "整層": [735,720,710,690,675,655,635,610,580], "套房": [1045,1030,1010,985,960,935,905,870,830] },
         "平鎮區": { "整層": [720,710,700,680,660,645,625,600,570], "套房": [900,885,870,850,830,805,780,750,715] },
         "大園區": { "整層": [735,720,710,690,675,655,635,610,580], "套房": [1045,1030,1010,985,960,935,905,870,830] },
-        "觀音區": { "整層": [700,685,675,660,640,625,605,580,555], "套房": [900,885,870,850,830,805,780,750,715] },
+        "觀音區": { "整層": [700,685,775,660,640,625,605,580,555], "套房": [900,885,870,850,830,805,780,750,715] },
         "楊梅區": { "整層": [615,605,595,580,565,550,535,510,485], "套房": [830,815,805,780,760,740,720,690,660] },
         "龍潭區": { "整層": [580,570,560,545,530,515,500,480,460], "套房": [830,815,805,780,760,740,720,690,660] },
         "大溪區": { "整層": [565,555,550,535,520,505,490,470,450], "套房": [710,700,685,670,650,635,615,590,565] },
@@ -448,7 +466,7 @@ function sumWrapper(card, wrapperClass) {
     return sum;
 }
 
-// ------------------ 核心計算引擎與列印去蕪存菁 ------------------
+// ------------------ 核心計算引擎與映射 ------------------
 function calculateAll() {
     // 1. 房東核心計算
     const city = document.getElementById('city').value;
@@ -481,7 +499,7 @@ function calculateAll() {
         box.innerText = "✅ 評定符合標準"; box.className = "status-box status-normal val-status"; rentBuildingOK = true; isLandlordInputted = true;
     }
 
-    // 2. 跨成員陣列加總與「零值判定標記」
+    // 2. 跨成員陣列加總與零值隱藏標記
     let totalAnnualIncome = 0, totalAsset = 0, totalProperty = 0;
     const memberCards = document.querySelectorAll("#familyContainer .member-card");
     let tenantCount = memberCards.length || 1;
@@ -494,7 +512,6 @@ function calculateAll() {
         let pLand = sumWrapper(card, 'land-wrapper');
         let pHouse = sumWrapper(card, 'house-wrapper');
 
-        // 如果該分類總和為 0，在網頁標記 class，列印時 CSS 自動拔除隱藏
         card.querySelector('.target-inc').className = (pIncome === 0) ? "member-item target-inc print-hide-item" : "member-item target-inc";
         card.querySelector('.target-int').className = (pInterest === 0) ? "member-item target-int print-hide-item" : "member-item target-int";
         card.querySelector('.target-game').className = (pGame === 0) ? "member-item target-game print-hide-item" : "member-item target-game";
@@ -527,7 +544,7 @@ function calculateAll() {
     else { stamp.style.display = "block"; stamp.className = "stamp fail"; stamp.innerText = "條件不符"; }
 
     // ==========================================
-    // 🖨️ 動態映射第二與第三頁列印複製品
+    // 🖨️ 同步映射第二與第三頁列印複製品
     // ==========================================
     document.getElementById('page2_inputs_mirror').innerHTML = document.getElementById('landlordCoreInputs').innerHTML;
     document.querySelector('.print-page2-rent select[id="city"]').value = city;
