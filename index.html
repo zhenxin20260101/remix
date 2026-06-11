@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東</title>
+    <title>社會住宅綜合試算系統 鎮信/安東2.0 </title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -37,24 +37,32 @@
         .sub-title { font-size: 1.05rem; color: var(--accent); font-weight: 800; margin: 15px 0 10px 0; border-left: 5px solid var(--accent); padding-left: 12px; }
         
         /* 成員獨立區塊 */
-        .member-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; }
+        .member-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 25px; position: relative; border-left: 5px solid var(--primary); }
         .member-card .member-header { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #cbd5e1; }
-        .member-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 15px; }
-        .member-item { display: flex; flex-direction: column; }
-        .member-item span { font-size: 0.75rem; color: var(--slate); font-weight: bold; margin-bottom: 3px; }
-        .member-calc-hint { font-size: 0.75rem; color: var(--accent); margin-top: 2px; text-align: right; font-weight: bold; }
+        .member-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 20px; }
+        
+        /* 內部新增項目的包裝 */
+        .member-item { display: flex; flex-direction: column; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .member-item > span { font-size: 0.85rem; color: var(--primary-dark); font-weight: bold; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .member-calc-hint { font-size: 0.8rem; color: var(--danger-text); margin-top: 4px; text-align: right; font-weight: bold; }
+        
+        /* 動態輸入行 */
+        .item-row { display: grid; grid-template-columns: 1fr auto; gap: 5px; margin-bottom: 5px; align-items: center; }
+        .item-row input { height: 34px; margin-bottom: 0; font-size: 0.9rem; }
         
         /* 表單列與輸入框 */
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 5px; }
         label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; color: var(--slate); }
         select, input { width: 100%; height: 42px; padding: 0 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; }
-        input[type="number"] { text-align: right; margin-bottom: 0; }
+        input[type="number"] { text-align: right; }
         
         /* 按鈕樣式 */
         button { border: none; border-radius: 8px; cursor: pointer; padding: 10px 16px; font-size: 0.9rem; font-weight: bold; transition: background 0.2s; }
         .drawer-btn { background: #f0f9ff; border: 2px dashed var(--accent); color: #2980b9; width: 100%; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 15px; }
         .add-btn { background: var(--primary-dark); color: white; width: 100%; padding: 12px; font-size: 1rem; }
         .add-btn:hover { background: var(--primary); }
+        .inner-add-btn { background: #e0f2fe; color: #0369a1; padding: 2px 8px; font-size: 0.75rem; border-radius: 4px; }
+        .inner-del-btn { background: #fee2e2; color: #b91c1c; padding: 5px 8px; font-size: 0.8rem; border-radius: 6px; height: 34px; }
         .delete-member-btn { background: var(--danger); color: white; height: 42px; }
         .print-btn { background: var(--success-text); color: white; font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .reset-btn { background: var(--danger); color: white; font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -86,19 +94,11 @@
         .pass { background: var(--success-bg); color: var(--success-text); }
         .fail { background: var(--danger-bg); color: var(--danger-text); }
         
-        /* 漏填財產提示框 */
         .warning-hint { font-size: 0.85rem; color: #b7791f; background: #fefcbf; border: 1px solid #fbd38d; padding: 10px; border-radius: 8px; margin-top: 8px; font-weight: bold; text-align: center; display: none; }
-        
-        /* 資格大蓋印 */
-        .stamp { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); 
-            font-size: 90px; font-weight: 900; padding: 20px 40px; border: 10px solid; border-radius: 24px; 
-            opacity: 0.15; pointer-events: none; display: none; z-index: 9999; text-align: center; white-space: nowrap;
-        }
+        .stamp { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); font-size: 90px; font-weight: 900; padding: 20px 40px; border: 10px solid; border-radius: 24px; opacity: 0.15; pointer-events: none; display: none; z-index: 9999; text-align: center; white-space: nowrap; }
         .stamp.pass { color: var(--success-text); border-color: var(--success-text); }
         .stamp.fail { color: var(--danger-text); border-color: var(--danger-text); }
         
-        /* 手機板調整 */
         @media (max-width: 768px) {
             body { padding: 10px; }
             .toolbar { flex-direction: column; gap: 10px; }
@@ -108,59 +108,34 @@
             .delete-member-btn { width: 100%; margin-top: 5px; }
         }
         
-        /* 🖨️ 精準三頁列印優化 (字體不縮小，大字清晰好讀) */
+        /* 🖨️ 精準三頁列印優化 (字體不縮小，100% 大字清晰好讀) */
         @media print {
-            html, body {
-                background: white;
-                color: #000;
-                padding: 0;
-                font-size: 11pt; 
-            }
-            button, .drawer-btn, .add-btn, .toolbar, .delete-member-btn, .member-calc-hint { display: none !important; }
+            html, body { background: white; color: #000; padding: 0; font-size: 11pt; }
+            button, .drawer-btn, .add-btn, .toolbar, .delete-member-btn, .member-calc-hint, .inner-add-btn, .inner-del-btn { display: none !important; }
             
-            /* 將網頁排版拉直 */
             .main-grid { display: block !important; }
             .result-side { display: block !important; }
             .result-sticky { position: relative !important; top: 0 !important; }
             
-            input, select {
-                border: 1px solid #000 !important;
-                background: transparent !important;
-                color: #000 !important;
-            }
+            input, select { border: 1px solid #000 !important; background: transparent !important; color: #000 !important; }
 
             /* --- 頁面 1：面積換算計算機 --- */
-            /* 強制讓隱藏的計算機在列印時現身 */
-            #areaCalculator { 
-                display: block !important; 
-                border: 1px solid #000 !important;
-                page-break-after: always; /* 填滿第一頁後，直接切斷換下一頁 */
-            }
-            /* 第一頁只印面積，所以隱藏房東核心與房客部分 */
-            #landlordCoreInputs, #print_landlord_result, .tenant-section, #print_tenant_result { 
-                display: none !important; 
-            }
+            #areaCalculator { display: block !important; border: 1px solid #000 !important; page-break-after: always; }
+            #landlordCoreInputs, #print_landlord_result, .tenant-section, #print_tenant_result { display: none !important; }
 
             /* --- 頁面 2：房東租金試算 --- */
-            /* 在新 HTML 的特殊列印載體中觸發 */
-            .print-page2-rent {
-                display: block !important;
-                page-break-before: always; /* 獨立落在第二頁 */
-                page-break-after: always;  /* 結束後切斷 */
-            }
+            .print-page2-rent { display: block !important; page-break-before: always; page-break-after: always; }
 
             /* --- 頁面 3：承租人財產與資格審查 --- */
-            .print-page3-tenant {
-                display: block !important;
-                page-break-before: always; /* 獨立落在第三頁開始 */
-            }
+            .print-page3-tenant { display: block !important; page-break-before: always; }
             
             .section { box-shadow: none; border: 1px solid #000; margin-bottom: 20px; }
+            .member-card { border: 1px solid #000 !important; background: #fff !important; margin-bottom: 15px; page-break-inside: avoid; }
+            .member-item { border: 1px solid #ccc !important; background: #fff !important; }
             .result-card { border: 2px solid #000; background: white !important; }
             .stamp { position: absolute; top: 40%; opacity: 0.25; display: block !important; }
         }
 
-        /* 網頁瀏覽時，隱藏列印專用的分頁複製體 */
         .print-page2-rent, .print-page3-tenant { display: none; }
     </style>
 </head>
@@ -183,7 +158,7 @@
                 <div class="section-title">第一部分：建物面積與租金評定</div>
                 
                 <button class="drawer-btn" onclick="toggleDrawer()">
-                    <span>📏 點開填寫：謄本面積換算 (此區塊列印時自動獨立為第一頁)</span><span id="drawerArrow">▼</span>
+                    <span>衡量工具：謄本面積換算 (此區塊列印時自動獨立為第一頁)</span><span id="drawerArrow">▼</span>
                 </button>
                 
                 <div id="areaCalculator">
@@ -287,7 +262,9 @@
             </div>
         </div>
 
-    </div> <div class="print-page2-rent">
+    </div> 
+    
+    <div class="print-page2-rent">
         <div class="section" style="border-top: 4px solid var(--accent);">
             <div class="section-title">第一部分補件：房東建物租金審查試算表</div>
             <div id="page2_inputs_mirror"></div>
@@ -344,9 +321,19 @@ const masterData = {
 const otherCh = ["溪湖鎮","田中鎮","北斗鎮","二林鎮","大村鄉","線西鄉","花壇鄉","伸港鄉","埔心鄉","埔鹽鄉","埤頭鄉","永靖鄉","溪州鄉","田尾鄉","福興鄉","竹塘鄉","芳苑鄉"];
 const otherNt = ["水里鄉","集集鎮","魚池鄉","鹿谷鄉","中寮鄉","國姓鄉","信義鄉","仁愛鄉"];
 
-// 頁面初始化
-document.getElementById("today").innerText = new Date().toLocaleDateString("zh-TW");
+function initDistricts() {
+    const city = document.getElementById('city').value;
+    const distSelect = document.getElementById('district');
+    distSelect.innerHTML = "";
+    let distSet = new Set(Object.keys(masterData[city] || {}));
+    if (city === "彰化縣") otherCh.forEach(d => distSet.add(d));
+    if (city === "南投縣") otherNt.forEach(d => distSet.add(d));
+    distSet.forEach(d => { 
+        let opt = document.createElement('option'); opt.value = d; opt.innerText = d; distSelect.appendChild(opt); 
+    });
+}
 
+function syncCityAndCalc() { initDistricts(); calculateAll(); }
 function toggleDrawer() {
     const d = document.getElementById('areaCalculator');
     d.style.display = (d.style.display === 'block') ? 'none' : 'block';
@@ -356,76 +343,33 @@ function toggleDrawer() {
 function runAreaCalc() {
     const pri = ["mMain", "mBal", "mFlower", "mRain", "mPlat", "mOth"].reduce((acc, id) => acc + parseFloat(document.getElementById(id).value || 0), 0);
     const getSub = (m, d, n) => parseFloat(document.getElementById(m).value||0) * (parseFloat(document.getElementById(n).value||0)/parseFloat(document.getElementById(d).value||1));
-    
-    const pub = getSub('mS1','dS1','nS1') + getSub('mS2','dS2','nS2') + getSub('mS3','dS3','nS3') +
-                getSub('mS4','dS4','nS4') + getSub('mS5','dS5','nS5') + getSub('mS6','dS6','nS6');
-                
+    const pub = getSub('mS1','dS1','nS1') + getSub('mS2','dS2','nS2') + getSub('mS3','dS3','nS3') + getSub('mS4','dS4','nS4') + getSub('mS5','dS5','nS5') + getSub('mS6','dS6','nS6');
     const car = getSub('mCar','dCar','nCar');
-    
-    const totalPing = (pri + pub) * 0.3025;
-    const carPing = car * 0.3025;
     const finalPing = (pri + pub - car) * 0.3025;
     
     document.getElementById('outPri').innerText = pri.toFixed(2);
     document.getElementById('outPub').innerText = pub.toFixed(2);
-    document.getElementById('outTotalPing').innerText = totalPing.toFixed(2);
-    document.getElementById('outCarPing').innerText = carPing.toFixed(2);
+    document.getElementById('outTotalPing').innerText = ((pri + pub) * 0.3025).toFixed(2);
+    document.getElementById('outCarPing').innerText = (car * 0.3025).toFixed(2);
     document.getElementById('outPing').innerText = finalPing.toFixed(2);
 }
 
-function applyArea() {
-    document.getElementById('area').value = document.getElementById('outPing').innerText;
-    toggleDrawer(); 
-    calculateAll();
-}
+function applyArea() { document.getElementById('area').value = document.getElementById('outPing').innerText; toggleDrawer(); calculateAll(); }
 
 function calcAgeByDate() {
     const s = document.getElementById('buildDate').value;
     if (s.length >= 7) {
-        const buildYearRoc = parseInt(s.substring(0, 3));
-        const buildMonth = parseInt(s.substring(3, 5));
-        const buildDay = parseInt(s.substring(5, 7));
-        
+        const buildYearRoc = parseInt(s.substring(0, 3)), buildMonth = parseInt(s.substring(3, 5)), buildDay = parseInt(s.substring(5, 7));
         if (!isNaN(buildYearRoc) && !isNaN(buildMonth) && !isNaN(buildDay)) {
-            const buildYearCe = buildYearRoc + 1911;
-            const today = new Date();
-            const currentYearCe = today.getFullYear();
-            const currentMonth = today.getMonth() + 1;
-            const currentDay = today.getDate();
-            
-            let finalAge = currentYearCe - buildYearCe;
-            if (currentMonth < buildMonth || (currentMonth === buildMonth && currentDay < buildDay)) {
-                finalAge--;
-            }
+            let finalAge = (new Date().getFullYear()) - (buildYearRoc + 1911);
+            if ((new Date().getMonth() + 1) < buildMonth || ((new Date().getMonth() + 1) === buildMonth && new Date().getDate() < buildDay)) finalAge--;
             document.getElementById('age').value = Math.max(0, finalAge);
             calculateAll();
         }
     }
 }
 
-function initDistricts() {
-    const city = document.getElementById('city').value;
-    const distSelect = document.getElementById('district');
-    distSelect.innerHTML = "";
-    
-    let distSet = new Set(Object.keys(masterData[city] || {}));
-    if (city === "彰化縣") otherCh.forEach(d => distSet.add(d));
-    if (city === "南投縣") otherNt.forEach(d => distSet.add(d));
-    
-    distSet.forEach(d => { 
-        let opt = document.createElement('option'); 
-        opt.value = d; 
-        opt.innerText = d; 
-        distSelect.appendChild(opt); 
-    });
-}
-
-function syncCityAndCalc() {
-    initDistricts();
-    calculateAll();
-}
-
-// ------------------ 房客獨立清單生成 ------------------
+// ------------------ 房客動態增減清單核心處理 ------------------
 let memberCounter = 0;
 
 function addFamilyMember() {
@@ -437,34 +381,184 @@ function addFamilyMember() {
         <div class="member-header">
             <input placeholder="家庭成員姓名" class="p-name">
             <input placeholder="身分證字號" class="p-id">
-            <button class="delete-member-btn" onclick="removeMember('${div.id}')">❌ 刪除</button>
+            <button class="delete-member-btn" onclick="removeMember('${div.id}')">❌ 刪除成員</button>
         </div>
         <div class="member-grid">
-            <div class="member-item"><span>年綜合所得總額 (元)</span><input type="number" class="p-income" value="0" oninput="calculateAll()"></div>
-            <div class="member-item"><span>利息收入 (元)</span><input type="number" class="p-interest" value="0" oninput="updatePersonalHint('${div.id}')"><div class="member-calc-hint" id="hint_interest_${div.id}">本金換算：0 元</div></div>
-            <div class="member-item"><span>中獎/競技所得 (元)</span><input type="number" class="p-game" value="0" oninput="calculateAll()"></div>
-            <div class="member-item"><span>其他動產所得 (元)</span><input type="number" class="p-other" value="0" oninput="calculateAll()"></div>
-            <div class="member-item"><span>土地公告現值 (元)</span><input type="number" class="p-land" value="0" oninput="calculateAll()"></div>
-            <div class="member-item"><span>房屋評定現值 (元)</span><input type="number" class="p-house" value="0" oninput="calculateAll()"></div>
+            <div class="member-item">
+                <span>年綜合所得總額 <button class="inner-add-btn" onclick="addInnerInput('${div.id}', 'inc-wrapper')">➕ 新增</button></span>
+                <div class="inc-wrapper"></div>
+            </div>
+            <div class="member-item">
+                <span>利息收入所得 <button class="inner-add-btn" onclick="addInnerInput('${div.id}', 'int-wrapper', true)">➕ 新增</button></span>
+                <div class="int-wrapper"></div>
+                <div class="member-calc-hint" id="hint_interest_${div.id}">本金總換算：0 元</div>
+            </div>
+            <div class="member-item">
+                <span>中獎/競技所得 <button class="inner-add-btn" onclick="addInnerInput('${div.id}', 'game-wrapper')">➕ 新增</button></span>
+                <div class="game-wrapper"></div>
+            </div>
+            <div class="member-item">
+                <span>其他動產所得 <button class="inner-add-btn" onclick="addInnerInput('${div.id}', 'oth-wrapper')">➕ 新增</button></span>
+                <div class="oth-wrapper"></div>
+            </div>
+            <div class="member-item">
+                <span>土地公告現值 <button class="inner-add-btn" onclick="addInnerInput('${div.id}', 'land-wrapper')">➕ 新增</button></span>
+                <div class="land-wrapper"></div>
+            </div>
+            <div class="member-item">
+                <span>房屋評定現值 <button class="inner-add-btn" onclick="addInnerInput('${div.id}', 'house-wrapper')">➕ 新增</button></span>
+                <div class="house-wrapper"></div>
+            </div>
         </div>
     `;
     document.getElementById("familyContainer").appendChild(div);
+    
+    // 預設幫每個新成員的每一項都先長出第一格輸入框，方便點選
+    addInnerInput(div.id, 'inc-wrapper');
+    addInnerInput(div.id, 'int-wrapper', true);
+    addInnerInput(div.id, 'game-wrapper');
+    addInnerInput(div.id, 'oth-wrapper');
+    addInnerInput(div.id, 'land-wrapper');
+    addInnerInput(div.id, 'house-wrapper');
+}
+
+function addInnerInput(memberId, wrapperClass, isInterest = false) {
+    const card = document.getElementById(memberId);
+    if(!card) return;
+    const wrapper = card.querySelector('.' + wrapperClass);
+    
+    let row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML = `
+        <input type="number" value="0" class="item-val" oninput="${isInterest ? `updateInterestSum('${memberId}')` : 'calculateAll()'}">
+        <button class="inner-del-btn" onclick="removeInnerRow(this, '${memberId}', ${isInterest})">❌</button>
+    `;
+    wrapper.appendChild(row);
     calculateAll();
 }
 
-function removeMember(id) {
-    const card = document.getElementById(id);
-    if(card) card.remove();
-    calculateAll();
+function removeInnerRow(btn, memberId, isInterest) {
+    btn.parentElement.remove();
+    if(isInterest) updateInterestSum(memberId);
+    else calculateAll();
 }
 
-function updatePersonalHint(memberId) {
+function removeMember(id) { document.getElementById(id).remove(); calculateAll(); }
+
+function updateInterestSum(memberId) {
     const card = document.getElementById(memberId);
     if (!card) return;
-    const interest = parseFloat(card.querySelector(".p-interest").value) || 0;
-    const principal = interest / 0.01035;
-    document.getElementById("hint_interest_" + memberId).innerText = "本金換算：" + Math.round(principal).toLocaleString() + " 元";
+    let sum = 0;
+    card.querySelectorAll('.int-wrapper .item-val').forEach(i => sum += parseFloat(i.value) || 0);
+    let principal = sum / 0.01035;
+    document.getElementById("hint_interest_" + memberId).innerText = "本金總換算：" + Math.round(principal).toLocaleString() + " 元";
     calculateAll();
+}
+
+function sumWrapper(card, wrapperClass) {
+    let sum = 0;
+    card.querySelectorAll('.' + wrapperClass + ' .item-val').forEach(i => sum += parseFloat(i.value) || 0);
+    return sum;
+}
+
+// ------------------ 總計算與列印鏡像映射 ------------------
+function calculateAll() {
+    // 1. 房東核心計算
+    const city = document.getElementById('city').value;
+    const dist = document.getElementById('district').value;
+    const type = document.getElementById('caseType').value;
+    const age = parseFloat(document.getElementById('age').value) || 0;
+    const area = parseFloat(document.getElementById('area').value) || 0;
+    const rent = parseFloat(document.getElementById('rent').value) || 0;
+    const adjL = parseFloat(document.getElementById('adjLoc').value);
+    const adjD = parseFloat(document.getElementById('adjDec').value);
+
+    const priceList = (masterData[city] && masterData[city][dist]) ? masterData[city][dist][type] : (type === "整層" ? [400,390,385,375,365,355,345,330,315] : [385,380,375,365,355,345,335,320,305]);
+    const basePrice = priceList[Math.min(8, Math.floor(age / 5))];
+    const adjustedPrice = basePrice * (1 + adjL + adjD);
+    
+    document.querySelector('.val-ref').innerText = basePrice + " 元/坪";
+    document.querySelector('.val-adj').innerText = Math.round(adjustedPrice) + " 元/坪";
+    let cap = (city === "桃園市") ? (type === "整層" ? 35000 : 21000) : (type === "整層" ? 22000 : 13000);
+    let maxVal = (!isNaN(adjustedPrice) && area > 0) ? Math.min(adjustedPrice * area, cap) : 0;
+    document.querySelector('.val-max').innerText = Math.round(maxVal).toLocaleString() + " 元";
+
+    const box = document.querySelector('.val-status');
+    let rentBuildingOK = false, isLandlordInputted = false;
+
+    if (rent === 0 || area === 0) { 
+        box.innerText = "待輸入關鍵數據"; box.className = "status-box status-init val-status"; 
+    } else if (rent > maxVal) { 
+        box.innerText = "❌ 評定不通過 (租金超額)"; box.className = "status-box status-danger val-status"; isLandlordInputted = true;
+    } else { 
+        box.innerText = "✅ 評定符合標準"; box.className = "status-box status-normal val-status"; rentBuildingOK = true; isLandlordInputted = true;
+    }
+
+    // 2. 跨成員陣列加總計算
+    let totalAnnualIncome = 0, totalAsset = 0, totalProperty = 0;
+    const memberCards = document.querySelectorAll("#familyContainer .member-card");
+    let tenantCount = memberCards.length || 1;
+    
+    memberCards.forEach(card => {
+        let pIncome = sumWrapper(card, 'inc-wrapper');
+        let pInterest = sumWrapper(card, 'int-wrapper');
+        let pGame = sumWrapper(card, 'game-wrapper');
+        let pOth = sumWrapper(card, 'oth-wrapper');
+        let pLand = sumWrapper(card, 'land-wrapper');
+        let pHouse = sumWrapper(card, 'house-wrapper');
+
+        totalAnnualIncome += pIncome;
+        totalAsset += (pInterest / 0.01035) + pGame + pOth;
+        totalProperty += pLand + pHouse;
+    });
+    let avgMonthlyIncome = totalAnnualIncome / 12 / tenantCount;
+
+    document.getElementById("emptyWarning").style.display = (memberCards.length > 0 && totalAnnualIncome === 0 && totalAsset === 0 && totalProperty === 0) ? "block" : "none";
+
+    let incomeLimit = (city === "桃園市") ? 58688 : 54303, assetLimit = (city === "桃園市") ? 4790000 : 3330000, propertyLimit = (city === "桃園市") ? 6630000 : 5600000;
+    let incomeOK = avgMonthlyIncome <= incomeLimit, assetOK = totalAsset <= assetLimit, propertyOK = totalProperty <= propertyLimit;
+
+    document.querySelector('.val-hcount').innerText = "全戶總人數：" + tenantCount + " 人";
+    document.querySelector('.val-avgincome').innerText = "全戶平均每人月收入：" + Math.round(avgMonthlyIncome).toLocaleString() + " 元";
+    document.querySelector('.val-assettotal').innerText = "全戶動產總額：" + Math.round(totalAsset).toLocaleString() + " 元";
+    document.querySelector('.val-propertytotal').innerText = "全戶不動產總額：" + Math.round(totalProperty).toLocaleString() + " 元";
+    showQualificationResult(document.querySelector('.val-incres'), incomeOK, "平均月收入", incomeLimit);
+    showQualificationResult(document.querySelector('.val-assetres'), assetOK, "全戶動產", assetLimit);
+    showQualificationResult(document.querySelector('.val-propres'), propertyOK, "全戶不動產", propertyLimit);
+
+    let stamp = document.getElementById("stamp");
+    if (!isLandlordInputted || memberCards.length === 0) stamp.style.display = "none";
+    else if (rentBuildingOK && incomeOK && assetOK && propertyOK) { stamp.style.display = "block"; stamp.className = "stamp pass"; stamp.innerText = "全案通過"; }
+    else { stamp.style.display = "block"; stamp.className = "stamp fail"; stamp.innerText = "條件不符"; }
+
+    // ==========================================
+    // 🖨️ 動態映射第二與第三頁列印複製品
+    // ==========================================
+    document.getElementById('page2_inputs_mirror').innerHTML = document.getElementById('landlordCoreInputs').innerHTML;
+    document.querySelector('.print-page2-rent select[id="city"]').value = city;
+    document.querySelector('.print-page2-rent select[id="district"]').value = dist;
+    document.querySelector('.print-page2-rent input[id="area"]').value = area;
+    document.querySelector('.print-page2-rent select[id="caseType"]').value = type;
+    document.querySelector('.print-page2-rent input[id="buildDate"]').value = document.getElementById('buildDate').value;
+    document.querySelector('.print-page2-rent input[id="age"]').value = age;
+    document.querySelector('.print-page2-rent select[id="adjLoc"]').value = adjL;
+    document.querySelector('.print-page2-rent select[id="adjDec"]').value = adjD;
+    document.querySelector('.print-page2-rent input[id="rent"]').value = rent;
+    document.getElementById('page2_result_mirror').innerHTML = document.getElementById('print_landlord_result').innerHTML;
+
+    // 同步第三頁
+    document.getElementById('page3_family_mirror').innerHTML = document.getElementById('familyContainer').innerHTML;
+    // 複雜深層遍歷：精確將每個子輸入框同步到複製品
+    const origInputs = document.querySelectorAll('#familyContainer input');
+    const mirrorInputs = document.querySelectorAll('#page3_family_mirror input');
+    origInputs.forEach((inp, idx) => { if(mirrorInputs[idx]) mirrorInputs[idx].value = inp.value; });
+    document.getElementById('page3_result_mirror').innerHTML = document.getElementById('print_tenant_result').innerHTML;
+}
+
+function showQualificationResult(element, ok, title, limit){
+    element.innerHTML = ok
+        ? `<div class="qualification-result pass">✓ ${title}符合標準</div>`
+        : `<div class="qualification-result fail">✗ ${title}超標（上限 ${limit.toLocaleString()} 元）</div>`;
 }
 
 function resetAllFields() {
@@ -485,104 +579,7 @@ function resetAllFields() {
     }
 }
 
-// ------------------ 核心計算與「列印映像檔鏡像」機制 ------------------
-function calculateAll() {
-    // 1. 房東核心計算
-    const city = document.getElementById('city').value;
-    const dist = document.getElementById('district').value;
-    const type = document.getElementById('caseType').value;
-    const age = parseFloat(document.getElementById('age').value) || 0;
-    const area = parseFloat(document.getElementById('area').value) || 0;
-    const rent = parseFloat(document.getElementById('rent').value) || 0;
-    const adjL = parseFloat(document.getElementById('adjLoc').value);
-    const adjD = parseFloat(document.getElementById('adjDec').value);
-
-    const priceList = (masterData[city] && masterData[city][dist]) ? masterData[city][dist][type] : (type === "整層" ? [400,390,385,375,365,355,345,330,315] : [385,380,375,365,355,345,335,320,305]);
-    const basePrice = priceList[Math.min(8, Math.floor(age / 5))];
-    const adjustedPrice = basePrice * (1 + adjL + adjD);
-    
-    // 渲染右側結果 (Web端)
-    document.querySelector('.val-ref').innerText = basePrice + " 元/坪";
-    document.querySelector('.val-adj').innerText = Math.round(adjustedPrice) + " 元/坪";
-    let cap = (city === "桃園市") ? (type === "整層" ? 35000 : 21000) : (type === "整層" ? 22000 : 13000);
-    let maxVal = (!isNaN(adjustedPrice) && area > 0) ? Math.min(adjustedPrice * area, cap) : 0;
-    document.querySelector('.val-max').innerText = Math.round(maxVal).toLocaleString() + " 元";
-
-    const box = document.querySelector('.val-status');
-    let rentBuildingOK = false, isLandlordInputted = false;
-
-    if (rent === 0 || area === 0) { 
-        box.innerText = "待輸入關鍵數據"; box.className = "status-box status-init val-status"; 
-    } else if (rent > maxVal) { 
-        box.innerText = "❌ 評定不通過 (租金超額)"; box.className = "status-box status-danger val-status"; isLandlordInputted = true;
-    } else { 
-        box.innerText = "✅ 評定符合標準"; box.className = "status-box status-normal val-status"; rentBuildingOK = true; isLandlordInputted = true;
-    }
-
-    // 2. 房客跨成員計算
-    let totalAnnualIncome = 0, totalAsset = 0, totalProperty = 0;
-    const memberCards = document.querySelectorAll("#familyContainer .member-card");
-    let tenantCount = memberCards.length || 1;
-    
-    memberCards.forEach(card => {
-        totalAnnualIncome += parseFloat(card.querySelector(".p-income").value) || 0;
-        totalAsset += ((parseFloat(card.querySelector(".p-interest").value) || 0) / 0.01035) + (parseFloat(card.querySelector(".p-game").value) || 0) + (parseFloat(card.querySelector(".p-other").value) || 0);
-        totalProperty += (parseFloat(card.querySelector(".p-land").value) || 0) + (parseFloat(card.querySelector(".p-house").value) || 0);
-    });
-    let avgMonthlyIncome = totalAnnualIncome / 12 / tenantCount;
-
-    document.getElementById("emptyWarning").style.display = (memberCards.length > 0 && totalAnnualIncome === 0 && totalAsset === 0 && totalProperty === 0) ? "block" : "none";
-
-    let incomeLimit = (city === "桃園市") ? 58688 : 54303, assetLimit = (city === "桃園市") ? 4790000 : 3330000, propertyLimit = (city === "桃園市") ? 6630000 : 5600000;
-    let incomeOK = avgMonthlyIncome <= incomeLimit, assetOK = totalAsset <= assetLimit, propertyOK = totalProperty <= propertyLimit;
-
-    // 渲染房客數據 (Web端)
-    document.querySelector('.val-hcount').innerText = "全戶總人數：" + tenantCount + " 人";
-    document.querySelector('.val-avgincome').innerText = "全戶平均每人月收入：" + Math.round(avgMonthlyIncome).toLocaleString() + " 元";
-    document.querySelector('.val-assettotal').innerText = "全戶動產總額：" + Math.round(totalAsset).toLocaleString() + " 元";
-    document.querySelector('.val-propertytotal').innerText = "全戶不動產總額：" + Math.round(totalProperty).toLocaleString() + " 元";
-    showQualificationResult(document.querySelector('.val-incres'), incomeOK, "平均月收入", incomeLimit);
-    showQualificationResult(document.querySelector('.val-assetres'), assetOK, "全戶動產", assetLimit);
-    showQualificationResult(document.querySelector('.val-propres'), propertyOK, "全戶不動產", propertyLimit);
-
-    // 蓋印控制
-    let stamp = document.getElementById("stamp");
-    if (!isLandlordInputted || memberCards.length === 0) stamp.style.display = "none";
-    else if (rentBuildingOK && incomeOK && assetOK && propertyOK) { stamp.style.display = "block"; stamp.className = "stamp pass"; stamp.innerText = "全案通過"; }
-    else { stamp.style.display = "block"; stamp.className = "stamp fail"; stamp.innerText = "條件不符"; }
-
-    // ==========================================
-    // 🖨️ 列印核心映射：動態把最新結果複製到分頁載體中
-    // ==========================================
-    document.getElementById('page2_inputs_mirror').innerHTML = document.getElementById('landlordCoreInputs').innerHTML;
-    // 把目前的下拉選單與輸入數值同步到第二頁複製品
-    document.querySelector('.print-page2-rent select[id="city"]').value = city;
-    document.querySelector('.print-page2-rent select[id="district"]').value = dist;
-    document.querySelector('.print-page2-rent input[id="area"]').value = area;
-    document.querySelector('.print-page2-rent select[id="caseType"]').value = type;
-    document.querySelector('.print-page2-rent input[id="buildDate"]').value = document.getElementById('buildDate').value;
-    document.querySelector('.print-page2-rent input[id="age"]').value = age;
-    document.querySelector('.print-page2-rent select[id="adjLoc"]').value = adjL;
-    document.querySelector('.print-page2-rent select[id="adjDec"]').value = adjD;
-    document.querySelector('.print-page2-rent input[id="rent"]').value = rent;
-    document.getElementById('page2_result_mirror').innerHTML = document.getElementById('print_landlord_result').innerHTML;
-
-    // 同步第三頁
-    document.getElementById('page3_family_mirror').innerHTML = document.getElementById('familyContainer').innerHTML;
-    // 確保每張成員卡片的數值在鏡像中被正確保存呈現
-    const origInputs = document.querySelectorAll('#familyContainer input');
-    const mirrorInputs = document.querySelectorAll('#page3_family_mirror input');
-    origInputs.forEach((inp, idx) => { if(mirrorInputs[idx]) mirrorInputs[idx].value = inp.value; });
-    document.getElementById('page3_result_mirror').innerHTML = document.getElementById('print_tenant_result').innerHTML;
-}
-
-function showQualificationResult(element, ok, title, limit){
-    element.innerHTML = ok
-        ? `<div class="qualification-result pass">✓ ${title}符合標準</div>`
-        : `<div class="qualification-result fail">✗ ${title}超標（上限 ${limit.toLocaleString()} 元）</div>`;
-}
-
-// 初始化
+// 啟動初始化
 initDistricts();
 addFamilyMember(); 
 runAreaCalc();
