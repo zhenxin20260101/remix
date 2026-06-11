@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東3.9</title>
+    <title>社會住宅綜合試算系統 鎮信/安東4.0</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -72,8 +72,8 @@
         .calc-table th, .calc-table td { padding: 8px; border: 1px solid #e2e8f0; text-align: center; }
         .calc-table input { height: 32px; border-width: 1px; color: var(--danger-text); text-align: center; margin-bottom: 0; padding: 0 5px; width: 100%; }
         
-        /* 專有兩欄排版的細部微調 */
-        .pri-header { background-color: #f8fafc; font-weight: bold; color: var(--primary-dark); }
+        /* 專有與共有標題樣式 */
+        .pri-header { background-color: #f1f5f9; font-weight: bold; color: var(--primary-dark); }
         .pri-label { background-color: #fff; font-weight: bold; color: #475569; width: 15%; text-align: right; padding-right: 15px; }
         .pri-input-td { width: 35%; }
 
@@ -142,7 +142,7 @@
 
             .print-hide-item { display: none !important; }
 
-            /* --- 頁面 1：純謄本面積 (兩欄三列，極致對稱) --- */
+            /* --- 頁面 1：純謄本面積 --- */
             #areaCalculator { display: block !important; border: 1px solid #000 !important; page-break-after: always; padding: 10px !important; }
             #landlordCoreInputs, #print_landlord_result, .tenant-section, #print_tenant_result { display: none !important; }
 
@@ -171,12 +171,12 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統3.9</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統4.0</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="toolbar">
     <button class="print-btn" onclick="window.print()">🖨️ 開始列印</button>
-    <button class="reset-btn" onclick="resetAllFields()">🔄 清空欄位</button>
+    <button class="reset-btn" onclick="resetAllFields()">🔄 清空重置所有欄位</button>
 </div>
 
 <div class="container">
@@ -193,8 +193,8 @@
                 <div id="areaCalculator">
                     <table class="calc-table">
                         <thead>
-                            <tr class="pri-header"><td colspan="2">專有部分（第一欄）</td><td colspan="2">專有部分（第二欄）</td></tr>
-                            <tr><th>項目名稱</th><th>面積(m²)</th><th>項目名稱</th><th>面積(m²)</th></tr>
+                            <tr class="pri-header"><td colspan="4" style="font-weight:bold; color:var(--primary-dark); text-align:center;">專有部分</td></tr>
+                            <tr style="background:#f8fafc; font-size:0.8rem; font-weight:bold;"><td>項目名稱</td><td>面積(m²)</td><td>項目名稱</td><td>面積(m²)</td></tr>
                         </thead>
                         <tbody>
                             <tr>
@@ -210,7 +210,7 @@
                                 <td class="pri-label">其他</td><td class="pri-input-td"><input type="number" id="mOth" value="0" oninput="runAreaCalc()"></td>
                             </tr>
                             
-                            <tr style="background:#f1f5f9;"><td colspan="4" style="font-weight:bold; color:var(--primary-dark);">共有部分 (公設持分與車位扣除)</td></tr>
+                            <tr style="background:#f1f5f9;"><td colspan="4" style="font-weight:bold; color:var(--primary-dark); text-align:center;">共有部分</td></tr>
                             <tr style="background:#f8fafc; font-size:0.8rem; font-weight:bold;"><td>項目名稱</td><td>總面積(m²)</td><td>持分分母</td><td>持分分子</td></tr>
                             <tr><td>公設 1</td><td><input type="number" id="mS1" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dS1" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nS1" value="0" oninput="runAreaCalc()"></td></tr>
                             <tr><td>公設 2</td><td><input type="number" id="mS2" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dS2" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nS2" value="0" oninput="runAreaCalc()"></td></tr>
@@ -485,7 +485,6 @@ function updateInterestSum(memberId) {
     calculateAll();
 }
 
-// 遍歷加總輔助函式
 function sumWrapper(card, wrapperClass) {
     let sum = 0;
     card.querySelectorAll('.' + wrapperClass + ' .item-val').forEach(i => sum += parseFloat(i.value) || 0);
@@ -620,7 +619,6 @@ function resetAllFields() {
     }
 }
 
-// 自動設定今天日期
 document.getElementById('today').innerText = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
 
 initDistricts(); addFamilyMember(); runAreaCalc(); calculateAll();
