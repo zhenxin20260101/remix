@@ -313,7 +313,7 @@
                     <div class="val-propres"></div>
                     <div id="emptyWarning" class="warning-hint">⚠️ 注意：全戶財產與所得目前皆為 0 元，請確認是否已完成登打。</div>
                     
-                    <button class="copy-line-btn" onclick="copyLineReport()">📋 一鍵複製 LINE 回報文案</button>
+                    <button class="copy-line-btn" onclick="copyLineReport()">📋 一鍵複製回報文案</button>
                 </div>
             </div>
         </div>
@@ -665,7 +665,7 @@ function showQualificationResult(element, ok, title, limit){
 function copyLineReport() {
     if (!snapReport.city) { alert("尚未登打任何有效數據！"); return; }
     
-    let text = `📢 【鎮信/安東 社會住宅綜合試算回報】\n`;
+    let text = `📢 【鎮信/安東社會住宅包租代管試算回報】\n`;
     text += `📅 試算日期：${snapReport.date}\n`;
     text += `----------------------------------------\n`;
     text += `🏢 【房東建物評定】\n`;
@@ -683,7 +683,7 @@ function copyLineReport() {
     text += `🎯 綜合審定結果：\n${snapReport.finalStatus}`;
 
     navigator.clipboard.writeText(text).then(() => {
-        alert("📋 LINE 綜合回報文案已成功複製到剪貼簿！可以直接貼上傳送囉！");
+        alert("📋綜合回報文案已成功複製！可以直接貼上傳送囉！");
     }).catch(err => {
         alert("複製失敗，請手動全選複製。");
     });
