@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東3.5</title>
+    <title>社會住宅綜合試算系統 鎮信/安東3.6</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -162,7 +162,7 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統3.5</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統3.6</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="toolbar">
@@ -574,9 +574,31 @@ function showQualificationResult(element, ok, title, limit){
 
 function resetAllFields() {
     if(confirm("確定要清空目前畫面上所有的登打資料嗎？")) {
-        document.getElementById('area').value = ""; document.getElementById('buildDate').value = ""; document.getElementById('age').value = "0"; document.getElementById('rent').value = ""; document.getElementById('adjLoc').value = "0"; document.getElementById('adjDec').value = "0";
-        document.getElementById("mMain").value = "63.66"; document.getElementById("mBal").value = "18.25";
-        document.getElementById("familyContainer").innerHTML = ""; memberCounter = 0; addFamilyMember(); runAreaCalc(); calculateAll();
+        // 1. 重置房東核心資料
+        document.getElementById('area').value = ""; 
+        document.getElementById('buildDate').value = ""; 
+        document.getElementById('age').value = "0"; 
+        document.getElementById('rent').value = ""; 
+        document.getElementById('adjLoc').value = "0"; 
+        document.getElementById('adjDec').value = "0";
+        
+        // 2. 修正：將謄本計算機的所有欄位通通回歸為 0
+        document.getElementById("mMain").value = "0"; 
+        document.getElementById("mBal").value = "0";
+        document.getElementById("mFlower").value = "0"; 
+        document.getElementById("mRain").value = "0"; 
+        document.getElementById("mPlat").value = "0"; 
+        document.getElementById("mOth").value = "0"; 
+        document.getElementById("mCar").value = "0";
+        
+        // 3. 清空房客卡片，並重新只建 1 個乾淨的申請人
+        document.getElementById("familyContainer").innerHTML = ""; 
+        memberCounter = 0; 
+        addFamilyMember(); 
+        
+        // 4. 重新觸發即時計算，更新所有報表數據
+        runAreaCalc(); 
+        calculateAll();
     }
 }
 
