@@ -24,6 +24,9 @@
         .main-header { text-align: center; color: var(--primary); margin-bottom: 5px; }
         .date-line { text-align: center; margin-bottom: 20px; color: #555; font-size: 0.95rem; }
         
+        /* 工具列 */
+        .toolbar { text-align: center; margin-bottom: 20px; display: flex; justify-content: center; gap: 15px; }
+        
         .container { max-width: 1400px; margin: auto; }
         .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 1100px) { .main-grid { grid-template-columns: 1.2fr 0.8fr; } }
@@ -33,19 +36,28 @@
         .section-title { font-size: 1.2rem; color: var(--primary-dark); font-weight: 800; margin: 0 0 15px 0; display: flex; justify-content: space-between; align-items: center; }
         .sub-title { font-size: 1.05rem; color: var(--accent); font-weight: 800; margin: 15px 0 10px 0; border-left: 5px solid var(--accent); padding-left: 12px; }
         
+        /* 成員獨立區塊 */
+        .member-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; }
+        .member-card .member-header { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #cbd5e1; }
+        .member-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 15px; }
+        .member-item { display: flex; flex-direction: column; }
+        .member-item span { font-size: 0.75rem; color: var(--slate); font-weight: bold; margin-bottom: 3px; }
+        .member-calc-hint { font-size: 0.75rem; color: var(--accent); margin-top: 2px; text-align: right; font-weight: bold; }
+        
         /* 表單列與輸入框 */
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 5px; }
         label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; color: var(--slate); }
         select, input { width: 100%; height: 42px; padding: 0 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; }
-        input[type="number"] { text-align: right; }
+        input[type="number"] { text-align: right; margin-bottom: 0; }
         
         /* 按鈕樣式 */
         button { border: none; border-radius: 8px; cursor: pointer; padding: 10px 16px; font-size: 0.9rem; font-weight: bold; transition: background 0.2s; }
         .drawer-btn { background: #f0f9ff; border: 2px dashed var(--accent); color: #2980b9; width: 100%; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .add-btn { background: var(--primary-dark); color: white; margin-top: 5px; }
+        .add-btn { background: var(--primary-dark); color: white; width: 100%; padding: 12px; font-size: 1rem; }
         .add-btn:hover { background: var(--primary); }
-        .delete-btn { background: var(--danger); color: white; height: 42px; margin-bottom: 10px; }
-        .print-btn { background: var(--success-text); color: white; font-size: 1.1rem; padding: 12px 24px; display: block; margin: 0 auto 20px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .delete-member-btn { background: var(--danger); color: white; height: 42px; }
+        .print-btn { background: var(--success-text); color: white; font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .reset-btn { background: var(--danger); color: white; font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn-apply { background: var(--slate); color: white; width: 100%; padding: 12px; margin-top: 10px; }
         
         /* 謄本計算機表格 */
@@ -57,10 +69,6 @@
         .area-summary-box { background: #fff5f5; padding: 12px; border-radius: 10px; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 1px solid #feb2b2; }
         .area-summary-item { font-size: 0.8rem; font-weight: bold; }
         .area-summary-item span { display: block; font-size: 1.1rem; color: var(--danger-text); }
-        
-        /* 動態新增列的排版 */
-        .dynamic-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: center; }
-        .dynamic-row.single-input { grid-template-columns: 1fr auto; }
         
         /* 右側結果欄 */
         .result-sticky { position: sticky; top: 20px; }
@@ -78,6 +86,9 @@
         .pass { background: var(--success-bg); color: var(--success-text); }
         .fail { background: var(--danger-bg); color: var(--danger-text); }
         
+        /* 漏填財產提示框 */
+        .warning-hint { font-size: 0.85rem; color: #b7791f; background: #fefcbf; border: 1px solid #fbd38d; padding: 10px; border-radius: 8px; margin-top: 8px; font-weight: bold; text-align: center; display: none; }
+        
         /* 資格大蓋印 */
         .stamp { 
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); 
@@ -90,20 +101,44 @@
         /* 手機板調整 */
         @media (max-width: 768px) {
             body { padding: 10px; }
+            .toolbar { flex-direction: column; gap: 10px; }
             .form-row { grid-template-columns: 1fr; gap: 0; }
-            .dynamic-row { grid-template-columns: 1fr; gap: 0; }
-            .dynamic-row.single-input { grid-template-columns: 1fr; gap: 0; }
-            .delete-btn { width: 100%; margin-top: -5px; margin-bottom: 15px; }
+            .member-card .member-header { grid-template-columns: 1fr; gap: 5px; }
+            .member-grid { grid-template-columns: 1fr; gap: 10px; }
+            .delete-member-btn { width: 100%; margin-top: 5px; }
         }
         
-        /* 列印樣式優化 */
+        /* 🖨️ 列印優化與強制縮放 70% 規則 */
         @media print {
-            button, .drawer-btn, .add-btn, .delete-btn, .print-btn, #areaCalculator { display: none !important; }
-            body { background: white; padding: 0; color: #000; }
-            .main-grid { grid-template-columns: 1fr !important; }
-            .section { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 15px; }
-            .result-card { border: 2px solid #000; }
-            .stamp { position: absolute; top: 30%; opacity: 0.25; display: block !important; }
+            html, body {
+                zoom: 70%; 
+                transform: scale(0.7); 
+                transform-origin: top center;
+                background: white;
+                color: #000;
+                padding: 0;
+            }
+            button, .drawer-btn, .add-btn, .toolbar, #areaCalculator, .delete-member-btn, .member-calc-hint { display: none !important; }
+            .main-grid { display: block !important; } 
+            
+            /* 強制加深輸入框與下拉選單的邊框，避免黑白列印變白紙一片 */
+            input, select {
+                border: 1px solid #000 !important;
+                background: transparent !important;
+            }
+            
+            /* 分頁核心設定 */
+            .landlord-section { 
+                page-break-inside: avoid; 
+                margin-bottom: 30px;
+            }
+            .tenant-section { 
+                page-break-before: always; 
+                page-break-inside: avoid;
+            }
+            .section { box-shadow: none; border: 1px solid #444; }
+            .result-card { border: 2px solid #000; background: white !important; }
+            .stamp { position: absolute; top: 25%; opacity: 0.25; display: block !important; }
         }
     </style>
 </head>
@@ -112,15 +147,18 @@
 <h1 class="main-header">社會住宅包租代管綜合試算系統</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
-<button class="print-btn" onclick="window.print()">🖨️ 列印完整評定試算表</button>
+<div class="toolbar">
+    <button class="print-btn" onclick="window.print()">🖨️ 列印完整評定試算表</button>
+    <button class="reset-btn" onclick="resetAllFields()">🔄 清空重置所有欄位</button>
+</div>
 
 <div class="container">
     <div class="main-grid">
         
         <div class="input-flow">
             
-            <div class="section">
-                <div class="section-title">第一部分：建物租金評定</div>
+            <div class="section landlord-section">
+                <div class="section-title">第一部分：建物租金評定（房東）</div>
                 
                 <button class="drawer-btn" onclick="toggleDrawer()">
                     <span>📏 謄本面積換算 (含附屬建物與公設扣除)</span><span id="drawerArrow">▼</span>
@@ -160,7 +198,7 @@
 
                 <div class="sub-title">評定核心資料</div>
                 <div class="form-row">
-                    <div><label>縣市 (連動變更)</label><select id="city" onchange="syncCityAndCalc()"><option value="桃園市">桃園市</option><option value="彰化縣">彰化縣</option><option value="南投縣">南投縣</option></select></div>
+                    <div><label>縣市 (全省連動)</label><select id="city" onchange="syncCityAndCalc()"><option value="桃園市">桃園市</option><option value="彰化縣">彰化縣</option><option value="南投縣">南投縣</option></select></div>
                     <div><label>行政區</label><select id="district" onchange="calculateAll()"></select></div>
                 </div>
                 <div class="form-row">
@@ -188,46 +226,11 @@
                 <label style="color: var(--primary-dark);">實收合約租金</label><input type="number" id="rent" placeholder="請輸入合約租金" oninput="calculateAll()">
             </div>
             
-            <div class="section">
-                <div class="section-title">第二部分：房客資格審查</div>
-                
-                <div class="sub-title">家庭成員/共同承租人</div>
-                <div id="tenantContainer"></div>
-                <button class="add-btn" onclick="addTenant()">➕ 新增承租人</button>
-                
-                <div class="sub-title">年綜合收入所得總額</div>
-                <div id="incomeContainer"></div>
-                <button class="add-btn" onclick="addIncome()">➕ 新增收入項目</button>
-                
-                <div class="sub-title">利息收入 (系統自動換算本金)</div>
-                <div id="interestContainer"></div>
-                <button class="add-btn" onclick="addInterest()">➕ 新增利息項目</button>
-                
-                <div class="form-row" style="margin-top:15px;">
-                    <div>
-                        <div class="sub-title" style="margin-top:0;">競技、競賽、機會中獎所得</div>
-                        <div id="gameContainer"></div>
-                        <button class="add-btn" onclick="addGame()">➕ 新增項目</button>
+            <div class="section tenant-section">
+                <div class="section-title">第二部分：房客家庭成員資料登打（房客）</div>
+                <div id="familyContainer">
                     </div>
-                    <div>
-                        <div class="sub-title" style="margin-top:0;">其他動產所得</div>
-                        <div id="otherContainer"></div>
-                        <button class="add-btn" onclick="addOther()">➕ 新增項目</button>
-                    </div>
-                </div>
-                
-                <div class="form-row" style="margin-top:15px;">
-                    <div>
-                        <div class="sub-title" style="margin-top:0;">土地公告現值總額</div>
-                        <div id="landContainer"></div>
-                        <button class="add-btn" onclick="addLand()">➕ 新增項目</button>
-                    </div>
-                    <div>
-                        <div class="sub-title" style="margin-top:0;">房屋評定現值總額</div>
-                        <div id="houseContainer"></div>
-                        <button class="add-btn" onclick="addHouse()">➕ 新增項目</button>
-                    </div>
-                </div>
+                <button class="add-btn" onclick="addFamilyMember()">➕ 新增家庭成員 / 共同承租人</button>
             </div>
 
         </div>
@@ -240,25 +243,26 @@
                     <div class="result-card">
                         <div class="res-row"><span>基準單價</span><span id="resRef">0 元/坪</span></div>
                         <div class="res-row"><span>加成後單價</span><span id="resAdj" style="font-weight:800;color:var(--accent);">0 元/坪</span></div>
-                        <div style="text-align:right;margin-top:15px;">
-                            <label style="color:var(--slate); font-weight:bold;">核定租金上限</label>
-                            <span class="res-max-val" id="resMax">0 元</span>
-                        </div>
+                        <div style="text-align:right;margin-top:15px;"><label style="color:var(--slate); font-weight:bold;">核定租金上限</label><span class="res-max-val" id="resMax">0 元</span></div>
                     </div>
                     <div id="statusBox" class="status-init">請輸入評定資料</div>
                 </div>
                 
                 <div class="section" style="border-top: 4px solid var(--success);">
-                    <div class="section-title">👥 房客審查綜合結果</div>
+                    <div class="section-title">👥 全戶資格審查總結果</div>
                     
-                    <div id="avgIncome" class="total-box">平均月收入：0 元</div>
+                    <div id="householdCount" class="total-box" style="border-left-color: var(--primary-dark)">全戶總人數：1 人</div>
+                    
+                    <div id="avgIncome" class="total-box">全戶平均每人月收入：0 元</div>
                     <div id="incomeResult"></div>
                     
-                    <div id="assetTotal" class="total-box">動產總額：0 元</div>
+                    <div id="assetTotal" class="total-box">全戶動產總額：0 元</div>
                     <div id="assetResult"></div>
                     
-                    <div id="propertyTotal" class="total-box">不動產總額：0 元</div>
+                    <div id="propertyTotal" class="total-box">全戶不動產總額：0 元</div>
                     <div id="propertyResult"></div>
+                    
+                    <div id="emptyWarning" class="warning-hint">⚠️ 注意：全戶財產與所得目前皆為 0 元，請確認是否已完成登打。</div>
                 </div>
                 
             </div>
@@ -270,9 +274,6 @@
 <div id="stamp" class="stamp"></div>
 
 <script>
-// 初始化設定
-document.getElementById("today").innerText = new Date().toLocaleDateString("zh-TW");
-
 const masterData = {
     "桃園市": {
         "桃園區": { "整層": [780,770,755,735,720,700,680,650,620], "套房": [1120,1100,1080,1055,1025,1000,970,930,885] },
@@ -309,14 +310,15 @@ const masterData = {
 const otherCh = ["溪湖鎮","田中鎮","北斗鎮","二林鎮","大村鄉","線西鄉","花壇鄉","伸港鄉","埔心鄉","埔鹽鄉","埤頭鄉","永靖鄉","溪州鄉","田尾鄉","福興鄉","竹塘鄉","芳苑鄉"];
 const otherNt = ["水里鄉","集集鎮","魚池鄉","鹿谷鄉","中寮鄉","國姓鄉","信義鄉","仁愛鄉"];
 
-// 抽屜控制
+// 頁面初始化
+document.getElementById("today").innerText = new Date().toLocaleDateString("zh-TW");
+
 function toggleDrawer() {
     const d = document.getElementById('areaCalculator');
     d.style.display = (d.style.display === 'block') ? 'none' : 'block';
     document.getElementById('drawerArrow').innerText = (d.style.display === 'block') ? '▲' : '▼';
 }
 
-// 面積計算
 function runAreaCalc() {
     const pri = ["mMain", "mBal", "mFlower", "mRain", "mPlat", "mOth"].reduce((acc, id) => acc + parseFloat(document.getElementById(id).value || 0), 0);
     const getSub = (m, d, n) => parseFloat(document.getElementById(m).value||0) * (parseFloat(document.getElementById(n).value||0)/parseFloat(document.getElementById(d).value||1));
@@ -343,19 +345,34 @@ function applyArea() {
     calculateAll();
 }
 
+// 調整 1：精準跨月、日之屋齡計算 (Bug 預防)
 function calcAgeByDate() {
     const s = document.getElementById('buildDate').value;
     if (s.length >= 7) {
-        const buildYear = parseInt(s.substring(0, 3));
-        if (!isNaN(buildYear)) {
-            const currentYear = new Date().getFullYear() - 1911;
-            document.getElementById('age').value = Math.max(0, currentYear - buildYear);
+        const buildYearRoc = parseInt(s.substring(0, 3));
+        const buildMonth = parseInt(s.substring(3, 5));
+        const buildDay = parseInt(s.substring(5, 7));
+        
+        if (!isNaN(buildYearRoc) && !isNaN(buildMonth) && !isNaN(buildDay)) {
+            const buildYearCe = buildYearRoc + 1911;
+            const today = new Date();
+            const currentYearCe = today.getFullYear();
+            const currentMonth = today.getMonth() + 1; // getMonth 0-11
+            const currentDay = today.getDate();
+            
+            let finalAge = currentYearCe - buildYearCe;
+            
+            // 防呆核心邏輯：如果當前月份小於完工月份，或是月份相同但日期還沒到完工日，屋齡就少算 1 年
+            if (currentMonth < buildMonth || (currentMonth === buildMonth && currentDay < buildDay)) {
+                finalAge--;
+            }
+            
+            document.getElementById('age').value = Math.max(0, finalAge);
             calculateAll();
         }
     }
 }
 
-// 行政區動態加載
 function initDistricts() {
     const city = document.getElementById('city').value;
     const distSelect = document.getElementById('district');
@@ -373,59 +390,105 @@ function initDistricts() {
     });
 }
 
-// 動態新增刪除房客表單列
-function removeRow(btn){
-    btn.parentElement.remove();
-    calculateAll();
-}
-
-function addTenant(){
-    let div = document.createElement("div");
-    div.className = "dynamic-row";
-    div.innerHTML = `
-        <input placeholder="姓名" style="margin-bottom:10px;">
-        <input placeholder="身分證" style="margin-bottom:10px;">
-        <button class="delete-btn" onclick="removeRow(this)">刪除</button>
-    `;
-    tenantContainer.appendChild(div);
-    calculateAll();
-}
-
-function addInput(containerId){
-    let div = document.createElement("div");
-    div.className = "dynamic-row single-input";
-    div.innerHTML = `
-        <input type="number" value="0" onimport="calculateAll()" onchange="calculateAll()" style="margin-bottom:10px;">
-        <button class="delete-btn" onclick="removeRow(this)">刪除</button>
-    `;
-    document.getElementById(containerId).appendChild(div);
-    calculateAll();
-}
-
-function addIncome(){ addInput("incomeContainer") }
-function addInterest(){ addInput("interestContainer") }
-function addGame(){ addInput("gameContainer") }
-function addOther(){ addInput("otherContainer") }
-function addLand(){ addInput("landContainer") }
-function addHouse(){ addInput("houseContainer") }
-
-function sumContainerValues(id){
-    let total = 0;
-    document.querySelectorAll("#" + id + " input").forEach(i => {
-        total += Number(i.value) || 0;
-    });
-    return total;
-}
-
-// 兩表核心串接：連動縣市並重算
 function syncCityAndCalc() {
     initDistricts();
     calculateAll();
 }
 
-// 全模組綜合計算核心
+// ------------------ 房客獨立清單動態生成 ------------------
+let memberCounter = 0;
+
+function addFamilyMember() {
+    memberCounter++;
+    let div = document.createElement("div");
+    div.className = "member-card";
+    div.id = "member_" + memberCounter;
+    div.innerHTML = `
+        <div class="member-header">
+            <input placeholder="家庭成員姓名" class="p-name">
+            <input placeholder="身分證字號" class="p-id">
+            <button class="delete-member-btn" onclick="removeMember('${div.id}')">❌ 刪除此成員</button>
+        </div>
+        <div class="member-grid">
+            <div class="member-item">
+                <span>年綜合所得總額 (元)</span>
+                <input type="number" class="p-income" value="0" oninput="calculateAll()">
+            </div>
+            <div class="member-item">
+                <span>利息收入 (元)</span>
+                <input type="number" class="p-interest" value="0" oninput="updatePersonalHint('${div.id}')">
+                <div class="member-calc-hint" id="hint_interest_${div.id}">本金換算：0 元</div>
+            </div>
+            <div class="member-item">
+                <span>中獎/競技所得 (元)</span>
+                <input type="number" class="p-game" value="0" oninput="calculateAll()">
+            </div>
+            <div class="member-item">
+                <span>其他動產所得 (元)</span>
+                <input type="number" class="p-other" value="0" oninput="calculateAll()">
+            </div>
+            <div class="member-item">
+                <span>土地公告現值 (元)</span>
+                <input type="number" class="p-land" value="0" oninput="calculateAll()">
+            </div>
+            <div class="member-item">
+                <span>房屋評定現值 (元)</span>
+                <input type="number" class="p-house" value="0" oninput="calculateAll()">
+            </div>
+        </div>
+    `;
+    document.getElementById("familyContainer").appendChild(div);
+    calculateAll();
+}
+
+function removeMember(id) {
+    const card = document.getElementById(id);
+    if(card) card.remove();
+    calculateAll();
+}
+
+function updatePersonalHint(memberId) {
+    const card = document.getElementById(memberId);
+    if (!card) return;
+    const interest = parseFloat(card.querySelector(".p-interest").value) || 0;
+    const principal = interest / 0.01035;
+    document.getElementById("hint_interest_" + memberId).innerText = "本金換算：" + Math.round(principal).toLocaleString() + " 元";
+    calculateAll();
+}
+
+// 調整 5：一鍵清空（重置）功能
+function resetAllFields() {
+    if(confirm("確定要清空目前畫面上所有的登打資料嗎？")) {
+        // 重置房東部分
+        document.getElementById('area').value = "";
+        document.getElementById('buildDate').value = "";
+        document.getElementById('age').value = "0";
+        document.getElementById('rent').value = "";
+        document.getElementById('adjLoc').value = "0";
+        document.getElementById('adjDec').value = "0";
+        
+        // 謄本計算機回復預設
+        document.getElementById("mMain").value = "63.66";
+        document.getElementById("mBal").value = "18.25";
+        document.getElementById("mFlower").value = "2.2";
+        document.getElementById("mRain").value = "0";
+        document.getElementById("mPlat").value = "0";
+        document.getElementById("mOth").value = "0";
+        document.getElementById("mCar").value = "0";
+        
+        // 清空房客卡片，並重新只建 1 個乾淨的申請人
+        document.getElementById("familyContainer").innerHTML = "";
+        memberCounter = 0;
+        addFamilyMember();
+        
+        runAreaCalc();
+        calculateAll();
+    }
+}
+
+// ------------------ 核心計算引擎 ------------------
 function calculateAll() {
-    // ------------------ 1. 物件租金評定計算 ------------------
+    // 1. 物件租金評定計算
     const city = document.getElementById('city').value;
     const dist = document.getElementById('district').value;
     const type = document.getElementById('caseType').value;
@@ -456,53 +519,83 @@ function calculateAll() {
 
     const box = document.getElementById('statusBox');
     let rentBuildingOK = false;
+    let isLandlordInputted = false;
+
     if (rent === 0 || area === 0) { 
         box.innerText = "待輸入關鍵數據"; 
         box.className = "status-box status-init"; 
     } else if (rent > maxVal) { 
         box.innerText = "❌ 評定不通過 (租金超額)"; 
         box.className = "status-box status-danger"; 
+        isLandlordInputted = true;
     } else { 
         box.innerText = "✅ 評定符合標準"; 
         box.className = "status-box status-normal";
         rentBuildingOK = true;
+        isLandlordInputted = true;
     }
 
-    // ------------------ 2. 房客資格審查計算 ------------------
+    // 2. 跨成員資料撈取與加總
+    let totalAnnualIncome = 0;
+    let totalAsset = 0;
+    let totalProperty = 0;
+    
+    const memberCards = document.querySelectorAll("#familyContainer .member-card");
+    let tenantCount = memberCards.length || 1;
+    
+    memberCards.forEach(card => {
+        let income = parseFloat(card.querySelector(".p-income").value) || 0;
+        let interest = parseFloat(card.querySelector(".p-interest").value) || 0;
+        let game = parseFloat(card.querySelector(".p-game").value) || 0;
+        let other = parseFloat(card.querySelector(".p-other").value) || 0;
+        let land = parseFloat(card.querySelector(".p-land").value) || 0;
+        let house = parseFloat(card.querySelector(".p-house").value) || 0;
+        
+        totalAnnualIncome += income;
+        totalAsset += (interest / 0.01035) + game + other;
+        totalProperty += land + house;
+    });
+
+    let avgMonthlyIncome = totalAnnualIncome / 12 / tenantCount;
+
+    // 調整 2：房客完全未登打財產時的防呆預設提示邏輯
+    const warningBox = document.getElementById("emptyWarning");
+    if (memberCards.length > 0 && totalAnnualIncome === 0 && totalAsset === 0 && totalProperty === 0) {
+        warningBox.style.display = "block";
+    } else {
+        warningBox.style.display = "none";
+    }
+
+    // 3. 審查標準判定
     let incomeLimit = (city === "桃園市") ? 58688 : 54303;
     let assetLimit = (city === "桃園市") ? 4790000 : 3330000;
     let propertyLimit = (city === "桃園市") ? 6630000 : 5600000;
 
-    let tenantCount = document.querySelectorAll("#tenantContainer .dynamic-row").length || 1;
+    document.getElementById("householdCount").innerText = "全戶總人數：" + tenantCount + " 人";
+    document.getElementById("avgIncome").innerText = "全戶平均每人月收入：" + Math.round(avgMonthlyIncome).toLocaleString() + " 元";
+    document.getElementById("assetTotal").innerText = "全戶動產總額：" + Math.round(totalAsset).toLocaleString() + " 元";
+    document.getElementById("propertyTotal").innerText = "全戶不動產總額：" + Math.round(totalProperty).toLocaleString() + " 元";
 
-    let annual = sumContainerValues("incomeContainer");
-    let avg = annual / 12 / tenantCount;
-
-    let interest = sumContainerValues("interestContainer");
-    let principal = interest / 0.01035;
-
-    let asset = principal + sumContainerValues("gameContainer") + sumContainerValues("otherContainer");
-    let property = sumContainerValues("landContainer") + sumContainerValues("houseContainer");
-
-    document.getElementById("avgIncome").innerText = "平均月收入：" + Math.round(avg).toLocaleString() + " 元";
-    document.getElementById("assetTotal").innerText = "動產總額：" + Math.round(asset).toLocaleString() + " 元";
-    document.getElementById("propertyTotal").innerText = "不動產總額：" + Math.round(property).toLocaleString() + " 元";
-
-    let incomeOK = avg <= incomeLimit;
-    let assetOK = asset <= assetLimit;
-    let propertyOK = property <= propertyLimit;
+    let incomeOK = avgMonthlyIncome <= incomeLimit;
+    let assetOK = totalAsset <= assetLimit;
+    let propertyOK = totalProperty <= propertyLimit;
 
     showQualificationResult("incomeResult", incomeOK, "平均月收入", incomeLimit);
-    showQualificationResult("assetResult", assetOK, "動產總額", assetLimit);
-    showQualificationResult("propertyResult", propertyOK, "不動產總額", propertyLimit);
+    showQualificationResult("assetResult", assetOK, "全戶動產", assetLimit);
+    showQualificationResult("propertyResult", propertyOK, "全戶不動產", propertyLimit);
 
-    // ------------------ 3. 綜合大蓋印判定 ------------------
+    // 4. 大蓋印動態控制 (調整 2：初始或資料空白時不蓋章)
     let stamp = document.getElementById("stamp");
-    if (rentBuildingOK && incomeOK && assetOK && propertyOK) {
+    
+    if (!isLandlordInputted || memberCards.length === 0) {
+        stamp.style.display = "none";
+    } 
+    else if (rentBuildingOK && incomeOK && assetOK && propertyOK) {
         stamp.style.display = "block";
         stamp.className = "stamp pass";
         stamp.innerText = "全案通過";
-    } else {
+    } 
+    else {
         stamp.style.display = "block";
         stamp.className = "stamp fail";
         stamp.innerText = "條件不符";
@@ -515,15 +608,9 @@ function showQualificationResult(id, ok, title, limit){
         : `<div class="qualification-result fail">✗ ${title}超標（上限 ${limit.toLocaleString()} 元）</div>`;
 }
 
-// 頁面初次載入執行
+// 初始化啟動
 initDistricts();
-addTenant();
-addIncome();
-addInterest();
-addGame();
-addOther();
-addLand();
-addHouse();
+addFamilyMember(); 
 runAreaCalc();
 calculateAll();
 </script>
