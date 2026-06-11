@@ -19,13 +19,25 @@
             --slate: #64748b;
         }
         * { box-sizing: border-box; }
-        body { font-family: -apple-system, "Segoe UI", "Microsoft JhengHei", sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: #334155; }
+        body { font-family: -apple-system, "Segoe UI", "Microsoft JhengHei", sans-serif; background-color: var(--bg); margin: 0; padding: 20px 20px 100px 20px; color: #334155; } /* 底部增加 padding 避免內容被置底工具列擋住 */
         
         .main-header { text-align: center; color: var(--primary); margin-bottom: 5px; }
         .date-line { text-align: center; margin-bottom: 20px; color: #555; font-size: 0.95rem; }
         
-        /* 工具列 */
-        .toolbar { text-align: center; margin-bottom: 20px; display: flex; justify-content: center; gap: 15px; }
+        /* 調整：包裝為新穎的置底固定工具列 */
+        .bottom-toolbar { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: white; 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1); 
+            padding: 15px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            z-index: 10000; 
+        }
         
         .container { max-width: 1400px; margin: auto; }
         .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
@@ -56,14 +68,14 @@
         input[type="number"] { text-align: right; }
         
         /* 按鈕群 */
-        button { border: none; border-radius: 8px; cursor: pointer; padding: 10px 16px; font-size: 0.9rem; font-weight: bold; transition: background 0.2s; }
+        button { border: none; border-radius: 8px; cursor: pointer; padding: 10px 20px; font-size: 0.95rem; font-weight: bold; transition: background 0.2s; }
         .drawer-btn { background: #f0f9ff; border: 2px dashed var(--accent); color: #2980b9; width: 100%; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 15px; }
         .add-btn { background: var(--primary-dark); color: white; width: 100%; padding: 12px; font-size: 1rem; }
         .inner-add-btn { background: #e0f2fe; color: #0369a1; padding: 2px 8px; font-size: 0.75rem; border-radius: 4px; }
         .inner-del-btn { background: #fee2e2; color: #b91c1c; padding: 5px 8px; font-size: 0.8rem; border-radius: 6px; height: 34px; }
         .delete-member-btn { background: var(--danger); color: white; height: 42px; }
-        .print-btn { background: var(--success-text); color: white; font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .reset-btn { background: var(--danger); color: white; font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .print-btn { background: var(--success-text); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 220px; height: 46px; font-size: 1.05rem; }
+        .reset-btn { background: var(--danger); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 220px; height: 46px; font-size: 1.05rem; }
         .btn-apply { background: var(--slate); color: white; width: 100%; padding: 12px; margin-top: 10px; }
         
         /* 謄本換算表格 */
@@ -105,7 +117,7 @@
         /* 🖨️ 列印優化樣式 */
         @media print {
             html, body { background: white; color: #000; padding: 0; font-size: 11pt; }
-            button, .drawer-btn, .add-btn, .toolbar, .delete-member-btn, .member-calc-hint, .inner-add-btn, .inner-del-btn { display: none !important; }
+            button, .drawer-btn, .add-btn, .bottom-toolbar, .delete-member-btn, .member-calc-hint, .inner-add-btn, .inner-del-btn { display: none !important; }
             
             .main-grid, .result-side { display: block !important; }
             .result-sticky { position: relative !important; top: 0 !important; }
@@ -171,12 +183,12 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統4.0</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統4.1</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
-<div class="toolbar">
+<div class="bottom-toolbar">
     <button class="print-btn" onclick="window.print()">🖨️ 開始列印</button>
-    <button class="reset-btn" onclick="resetAllFields()">🔄 清空重置所有欄位</button>
+    <button class="reset-btn" onclick="resetAllFields()">🔄 清空欄位</button>
 </div>
 
 <div class="container">
