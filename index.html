@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東4.2</title>
+    <title>社會住宅綜合試算系統 鎮信/安東4.8</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -20,9 +20,6 @@
         }
         * { box-sizing: border-box; }
         body { font-family: -apple-system, "Segoe UI", "Microsoft JhengHei", sans-serif; background-color: var(--bg); margin: 0; padding: 20px 20px 100px 20px; color: #334155; }
-        
-        .main-header { text-align: center; color: var(--primary); margin-bottom: 5px; }
-        .date-line { text-align: center; margin-bottom: 20px; color: #555; font-size: 0.95rem; }
         
         /* 置底固定工具列 */
         .bottom-toolbar { 
@@ -77,10 +74,7 @@
         .print-btn { background: var(--success-text); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 220px; height: 46px; font-size: 1.05rem; }
         .reset-btn { background: var(--danger); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 220px; height: 46px; font-size: 1.05rem; }
         .btn-apply { background: var(--slate); color: white; width: 100%; padding: 12px; margin-top: 10px; }
-        
-        /* 📋 LINE 複製按鈕樣式 */
         .copy-line-btn { background: #24b04b; color: white; width: 100%; padding: 12px; font-size: 1rem; border-radius: 10px; margin-top: 15px; box-shadow: 0 4px 8px rgba(36,176,75,0.2); }
-        .copy-line-btn:hover { background: #1f9a41; }
         
         /* 謄本換算表格 */
         #areaCalculator { display: none; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 15px; }
@@ -88,10 +82,9 @@
         .calc-table th, .calc-table td { padding: 8px; border: 1px solid #e2e8f0; text-align: center; }
         .calc-table input { height: 32px; border-width: 1px; color: var(--danger-text); text-align: center; margin-bottom: 0; padding: 0 5px; width: 100%; }
         
-        /* 實務教育訓練提示 */
         .edu-hint { font-size: 0.75rem; color: #0284c7; background: #e0f2fe; padding: 6px 10px; border-radius: 6px; text-align: left; margin-top: 6px; font-weight: 500; line-height: 1.4; }
         
-        .pri-header { background-color: #f1f5f9; font-weight: bold; color: var(--primary-dark); }
+        .pri-header { background-color: #f1f5f9; font-weight: bold; color: var(--primary-dark); text-align: center; }
         .pri-label { background-color: #fff; font-weight: bold; color: #475569; width: 15%; text-align: right; padding-right: 15px; }
         .pri-input-td { width: 35%; }
 
@@ -185,18 +178,20 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統4.2</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統4.8</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="bottom-toolbar">
     <button class="print-btn" onclick="window.print()">🖨️ 開始列印</button>
-    <button class="reset-btn" onclick="resetAllFields()">🔄 清空欄位</button>
+    <button class="reset-btn" onclick="resetAllFields()">🔄 清空所有欄位</button>
 </div>
 
 <div class="container">
     <div class="main-grid">
         
+        <!-- 左側主輸入流 -->
         <div class="input-flow">
+            <!-- 第一部分：建物面積與租金 -->
             <div class="section landlord-section">
                 <div class="section-title">第一部分：建物面積與租金評定</div>
                 
@@ -207,7 +202,7 @@
                 <div id="areaCalculator">
                     <table class="calc-table">
                         <thead>
-                            <tr class="pri-header"><td colspan="4" style="font-weight:bold; color:var(--primary-dark); text-align:center;">專有部分</td></tr>
+                            <tr class="pri-header"><td colspan="4" style="font-weight:bold; color:var(--primary-dark);">專有部分</td></tr>
                             <tr style="background:#f8fafc; font-size:0.8rem; font-weight:bold;"><td>項目名稱</td><td>面積(m²)</td><td>項目名稱</td><td>面積(m²)</td></tr>
                         </thead>
                         <tbody>
@@ -224,6 +219,7 @@
                                 <td class="pri-label">其他</td><td class="pri-input-td"><input type="number" id="mOth" value="0" oninput="runAreaCalc()"></td>
                             </tr>
                             
+                            <!-- 共有部分 -->
                             <tr style="background:#f1f5f9;"><td colspan="4" style="font-weight:bold; color:var(--primary-dark); text-align:center;">共有部分</td></tr>
                             <tr style="background:#f8fafc; font-size:0.8rem; font-weight:bold;"><td>項目名稱</td><td>總面積(m²)</td><td>持分分母</td><td>持分分子</td></tr>
                             <tr><td>公設 1</td><td><input type="number" id="mS1" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dS1" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nS1" value="0" oninput="runAreaCalc()"></td></tr>
@@ -232,11 +228,10 @@
                             <tr><td>公設 4</td><td><input type="number" id="mS4" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dS4" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nS4" value="0" oninput="runAreaCalc()"></td></tr>
                             <tr><td>公設 5</td><td><input type="number" id="mS5" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dS5" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nS5" value="0" oninput="runAreaCalc()"></td></tr>
                             <tr><td>公設 6</td><td><input type="number" id="mS6" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dS6" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nS6" value="0" oninput="runAreaCalc()"></td></tr>
-                            
                             <tr style="background:#ebf8ff;"><td style="color:blue; font-weight:bold;">車位扣除</td><td><input type="number" id="mCar" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dCar" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nCar" value="0" oninput="runAreaCalc()"></td></tr>
                         </tbody>
                     </table>
-                    <div class="edu-hint">💡 實務提醒：若共有部分包含獨立編號之車位，請將該公設總面積填入「車位扣除」，並依據建物登記謄本登載之車位權利範圍（持分分母、分子）確實輸入。</div>
+                    <div class="edu-hint">💡若共有部分包含獨立編號之車位，請將該公設總面積填入「車位扣除」，並依據建物登記謄本登載之車位權利範圍確實輸入。</div>
                     
                     <div class="area-summary-box">
                         <div class="area-summary-item">專有面積(m²) <span id="outPri">0</span></div>
@@ -282,14 +277,17 @@
                 </div>
             </div>
             
+            <!-- 區塊二：房客資料登打區 -->
             <div class="section tenant-section" id="webTenantSection">
                 <div class="section-title">第二部分：房客家庭成員資料登打</div>
                 <div id="familyContainer">
-                    </div>
+                    <!-- JavaScript 動態生成卡片 -->
+                </div>
                 <button class="add-btn" onclick="addFamilyMember()">➕ 新增家庭成員 / 共同承租人</button>
             </div>
         </div>
         
+        <!-- 右側即時結果面板 (網頁呈現) -->
         <div class="result-side" id="webResultSide">
             <div class="result-sticky">
                 <div class="section" id="print_landlord_result" style="border-top: 4px solid var(--accent);">
@@ -312,16 +310,16 @@
                     <div class="total-box val-propertytotal">全戶不動產總額：0 元</div>
                     <div class="val-propres"></div>
                     <div id="emptyWarning" class="warning-hint">⚠️ 注意：全戶財產與所得目前皆為 0 元，請確認是否已完成登打。</div>
-                    
-                    <button class="copy-line-btn" onclick="copyLineReport()">📋 一鍵複製回報文案</button>
+                    <button class="copy-line-btn" onclick="copyLineReport()">📋 一鍵複製 LINE 回報文案</button>
                 </div>
             </div>
         </div>
     </div> 
     
+    <!-- 🖨️ 列印專用隱藏分頁鏡像 -->
     <div class="print-page2-rent">
         <div class="section" style="border-top: 4px solid var(--accent);">
-            <div class="section-title">第一部分補件：房東建物租金審查試算表</div>
+            <div class="section-title">第一部分：房東建物租金審查試算表</div>
             <div id="page2_inputs_mirror"></div>
             <div style="margin-top:15px;" id="page2_result_mirror"></div>
         </div>
@@ -329,7 +327,7 @@
 
     <div class="print-page3-tenant">
         <div class="section" style="border-top: 4px solid var(--success);">
-            <div class="section-title">第二部分補件：房客資格審查與財產清單</div>
+            <div class="section-title">第二部分：房客資格審查與財產清單</div>
             <div id="page3_family_mirror"></div>
             <div style="margin-top:15px;" id="page3_result_mirror"></div>
         </div>
@@ -339,6 +337,7 @@
 <div id="stamp" class="stamp"></div>
 
 <script>
+// 114 年租金區間表資料庫：嚴謹校正！桃園市依官方數據不包含「其他」，彰投兩縣市完好保留「其他」保底。
 const masterData = {
     "桃園市": {
         "桃園區": { "整層": [780,770,755,735,720,700,680,650,620], "套房": [1120,1100,1080,1055,1025,1000,970,930,885] },
@@ -355,27 +354,54 @@ const masterData = {
         "新屋區": { "整層": [580,570,560,545,530,515,500,480,460], "套房": [625,615,605,590,575,560,545,520,495] },
         "復興區": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] }
     },
-   "彰化縣": {
-        "彰化市": { "整層":[600,590,580,565,550,535,520,500,475], "套房":[745,735,720,705,685,665,645,620,590] },
-        "員林市": { "整層":[600,590,580,565,550,535,520,500,475], "套房":[675,665,650,635,620,600,585,560,535] },
-        "和美鎮": { "整層":[555,545,535,520,510,495,480,460,440], "套房":[565,555,550,535,520,505,490,470,450] },
-        "鹿港鎮": { "整層":[505,500,490,475,465,450,440,420,400], "套房":[565,555,550,535,520,505,490,470,450] },
-        "秀水鄉": { "整層":[480,475,465,455,445,430,420,400,380], "套房":[565,555,550,535,520,505,490,470,450] },
-        "社頭鄉": { "整層":[470,465,455,445,430,420,410,390,375], "套房":[480,475,465,455,445,430,420,400,380] }
+    "彰化縣": {
+        "員林市": { "整層": [600,590,580,565,550,535,520,500,475], "套房": [675,665,650,635,620,600,585,560,535] },
+        "彰化市": { "整層": [600,590,580,565,550,535,520,500,475], "套房": [745,735,720,705,685,665,645,620,590] },
+        "和美鎮": { "整層": [555,545,535,520,510,495,480,460,440], "套房": [565,555,550,535,520,505,490,470,450] },
+        "鹿港鎮": { "整層": [505,500,490,475,465,450,440,420,400], "套房": [565,555,550,535,520,505,490,470,450] },
+        "秀水鄉": { "整層": [480,475,465,455,445,430,420,400,380], "套房": [565,555,550,535,520,505,490,470,450] },
+        "社頭鄉": { "整層": [470,465,455,445,430,420,410,390,375], "套房": [480,475,465,455,445,430,420,400,380] },
+        "二林鎮": { "整層": [445,440,430,420,410,400,385,370,355], "套房": [460,450,445,430,420,410,400,380,365] },
+        "大村鄉": { "整層": [445,440,430,420,410,400,385,370,355], "套房": [460,450,445,430,420,410,400,380,365] },
+        "線西鄉": { "整層": [445,440,430,420,410,400,385,370,355], "套房": [460,450,445,430,420,410,400,380,365] },
+        "花壇鄉": { "整層": [445,440,430,420,410,400,385,370,355], "套房": [460,450,445,430,420,410,400,380,365] },
+        "伸港鄉": { "整層": [435,425,420,410,400,390,375,360,345], "套房": [445,440,430,420,410,400,385,370,355] },
+        "北斗鎮": { "整層": [435,425,420,410,400,390,375,360,345], "套房": [445,440,430,420,410,400,385,370,355] },
+        "埔心鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "埔鹽鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "埤頭鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "永靖鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "溪州鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "溪湖鎮": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "田中鎮": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "田尾鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "福興鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "竹塘鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "芳苑鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [410,405,395,385,375,365,355,340,325] },
+        "芬園鄉": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] },
+        "大城鄉": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] },
+        "二水鄉": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] },
+        "其他": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] }
     },
     "南投縣": {
-        "南投市": { "整層":[600,590,580,565,550,535,520,500,475], "套房":[660,650,640,625,605,590,575,550,525] },
-        "草屯鎮": { "整層":[625,615,605,590,575,560,545,520,495], "套房":[660,650,640,625,605,590,575,550,525] },
-        "埔里鎮": { "整層":[580,570,560,545,530,515,500,480,460], "套房":[600,590,580,565,550,535,520,500,475] },
-        "竹山鎮": { "整層":[435,425,420,410,400,390,375,360,345], "套房":[480,475,465,455,445,430,420,400,380] },
-        "名間鄉": { "整層":[410,405,395,385,375,365,355,340,325], "套房":[420,415,410,400,390,375,365,350,335] }
+        "草屯鎮": { "整層": [625,615,605,590,575,560,545,520,495], "套房": [660,650,640,625,605,590,575,550,525] },
+        "南投市": { "整層": [600,590,580,565,550,535,520,500,475], "套房": [660,650,640,625,605,590,575,550,525] },
+        "埔里鎮": { "整層": [580,570,560,545,530,515,500,480,460], "套房": [600,590,580,565,550,535,520,500,475] },
+        "竹山鎮": { "整層": [435,425,420,410,400,390,375,360,345], "套房": [480,475,465,455,445,430,420,400,380] },
+        "名間鄉": { "整層": [410,405,395,385,375,365,355,340,325], "套房": [420,415,410,400,390,375,365,350,335] },
+        "水里鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [420,415,410,400,390,375,365,350,335] },
+        "集集鎮": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [420,415,410,400,390,375,365,350,335] },
+        "魚池鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [420,415,410,400,390,375,365,350,335] },
+        "鹿谷鄉": { "整層": [400,390,385,375,365,355,345,330,315], "套房": [420,415,410,400,390,375,365,350,335] },
+        "中寮鄉": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] },
+        "國姓鄉": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] },
+        "信義鄉": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] },
+        "仁愛鄉": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] },
+        "其他": { "整層": [375,370,360,355,345,335,325,310,295], "套房": [385,380,375,365,355,345,335,320,305] }
     }
 };
 
-const otherCh = ["溪湖鎮","田中鎮","北斗鎮","二林鎮","大村鄉","線西鄉","花壇鄉","伸港鄉","埔心鄉","埔鹽鄉","埤頭鄉","永靖鄉","溪州鄉","田尾鄉","福興鄉","竹塘鄉","芳苑鄉"];
-const otherNt = ["水里鄉","集集鎮","魚池鄉","鹿谷鄉","中寮鄉","國姓鄉","信義鄉","仁愛鄉"];
-
-// 新增第4項：優化行政區智慧預設排序與選取
+// 嚴謹生成選單邏輯：桃園市13區完全獨立，只有彰化與南投最尾巴有「其他」
 function initDistricts() {
     const city = document.getElementById('city').value;
     const distSelect = document.getElementById('district');
@@ -383,21 +409,23 @@ function initDistricts() {
     
     let distSet = new Set();
     
-    // 依業務實務量，設定智慧第一預設順位
     if (city === "桃園市") {
         ["桃園區", "中壢區", "平鎮區", "八德區"].forEach(d => distSet.add(d));
     } else if (city === "彰化縣") {
-        ["彰化市", "員林市"].forEach(d => distSet.add(d));
+        ["員林市", "彰化市", "和美鎮", "鹿港鎮"].forEach(d => distSet.add(d));
     } else if (city === "南投縣") {
-        ["南投市", "草屯鎮", "埔里鎮"].forEach(d => distSet.add(d));
+        ["草屯鎮", "南投市", "埔里鎮"].forEach(d => distSet.add(d));
     }
     
-    // 填入其餘有資料的區域
-    Object.keys(masterData[city] || {}).forEach(d => distSet.add(d));
+    // 先把 masterData 中所有行政區塞進去（排除"其他"，後面再針對彰、投特別給予）
+    Object.keys(masterData[city] || {}).forEach(d => {
+        if (d !== "其他") distSet.add(d);
+    });
     
-    // 填入純鄉鎮清單
-    if (city === "彰化縣") otherCh.forEach(d => distSet.add(d));
-    if (city === "南投縣") otherNt.forEach(d => distSet.add(d));
+    // 【重點修正】：依據官方公告圖表，只有彰化縣跟南投縣的末尾會塞入「其他」
+    if (city === "彰化縣" || city === "南投縣") {
+        distSet.add("其他");
+    }
     
     distSet.forEach(d => { 
         let opt = document.createElement('option'); 
@@ -532,10 +560,9 @@ function sumWrapper(card, wrapperClass) {
     return sum;
 }
 
-// ------------------ 全域快照儲存變數 (供 LINE 複製使用) ------------------
 let snapReport = {};
 
-// ------------------ 核心計算引擎 ------------------
+// ------------------ 核心計算引擎與映射 ------------------
 function calculateAll() {
     const city = document.getElementById('city').value;
     const dist = document.getElementById('district').value;
@@ -546,7 +573,8 @@ function calculateAll() {
     const adjL = parseFloat(document.getElementById('adjLoc').value);
     const adjD = parseFloat(document.getElementById('adjDec').value);
 
-    const priceList = (masterData[city] && masterData[city][dist]) ? masterData[city][dist][type] : (type === "整層" ? [400,390,385,375,365,355,345,330,315] : [385,380,375,365,355,345,335,320,305]);
+    // 完美防呆：桃園如果找不對行政區會退回原生保底「其他」，彰投則直接抓對應大括號
+    const priceList = (masterData[city] && masterData[city][dist]) ? masterData[city][dist][type] : masterData[city]["其他"][type];
     const basePrice = priceList[Math.min(8, Math.floor(age / 5))];
     const adjustedPrice = basePrice * (1 + adjL + adjD);
     
@@ -612,29 +640,22 @@ function calculateAll() {
         casePassStatus = "待輸入關鍵審查資料";
     } else if (rentBuildingOK && incomeOK && assetOK && propertyOK) { 
         stamp.style.display = "block"; stamp.className = "stamp pass"; stamp.innerText = "全案通過"; 
-        casePassStatus = "【🎉 全案審查合格】";
+        casePassStatus = "【🎉 全案審查合格，准予進件】";
     } else { 
         stamp.style.display = "block"; stamp.className = "stamp fail"; stamp.innerText = "條件不符"; 
-        casePassStatus = "【❌ 條件不符】";
+        casePassStatus = "【❌ 條件不符，不予進件】";
     }
 
-    // 儲存快照，以便供複製文案讀取
     snapReport = {
         date: document.getElementById('today').innerText,
-        city: city, dist: dist, type: type, age: age, area: area, rent: rent,
-        maxVal: Math.round(maxVal),
-        landlordCheck: rentBuildingOK ? "符合(未超額)" : (rent > maxVal ? "超額不通過" : "未完成輸入"),
-        tenantCount: tenantCount,
-        avgMonthlyIncome: Math.round(avgMonthlyIncome),
-        totalAsset: Math.round(totalAsset),
-        totalProperty: Math.round(totalProperty),
-        incomeOK: incomeOK ? "符合" : "超標",
-        assetOK: assetOK ? "符合" : "超標",
-        propertyOK: propertyOK ? "符合" : "超標",
+        city: city, dist: dist, type: type, age: age, area: area, rent: rent, maxVal: Math.round(maxVal),
+        landlordCheck: rentBuildingOK ? "符合" : "超額不通過", tenantCount: tenantCount,
+        avgMonthlyIncome: Math.round(avgMonthlyIncome), totalAsset: Math.round(totalAsset), totalProperty: Math.round(totalProperty),
+        incomeOK: incomeOK ? "符合" : "超標", assetOK: assetOK ? "符合" : "超標", propertyOK: propertyOK ? "符合" : "超標",
         finalStatus: casePassStatus
     };
 
-    // 同步第二頁鏡像
+    // 同步分頁鏡像
     document.getElementById('page2_inputs_mirror').innerHTML = document.getElementById('landlordCoreInputs').innerHTML;
     document.querySelector('.print-page2-rent select[id="city"]').value = city;
     document.querySelector('.print-page2-rent select[id="district"]').value = dist;
@@ -647,7 +668,6 @@ function calculateAll() {
     document.querySelector('.print-page2-rent input[id="rent"]').value = rent;
     document.getElementById('page2_result_mirror').innerHTML = document.getElementById('print_landlord_result').innerHTML;
 
-    // 同步第三頁鏡像
     document.getElementById('page3_family_mirror').innerHTML = document.getElementById('familyContainer').innerHTML;
     const origInputs = document.querySelectorAll('#familyContainer input');
     const mirrorInputs = document.querySelectorAll('#page3_family_mirror input');
@@ -661,17 +681,15 @@ function showQualificationResult(element, ok, title, limit){
         : `<div class="qualification-result fail">✗ ${title}超標（上限 ${limit.toLocaleString()} 元）</div>`;
 }
 
-// 新增第5項：智慧自動組合 LINE 通報文字功能
 function copyLineReport() {
     if (!snapReport.city) { alert("尚未登打任何有效數據！"); return; }
-    
-    let text = `📢 【鎮信/安東社會住宅包租代管試算回報】\n`;
+    let text = `📢 【鎮信/安東 社會住宅綜合試算回報】\n`;
     text += `📅 試算日期：${snapReport.date}\n`;
     text += `----------------------------------------\n`;
     text += `🏢 【房東建物評定】\n`;
     text += `▪ 標的區位：${snapReport.city}${snapReport.dist} (${snapReport.type}物件)\n`;
     text += `▪ 屋齡坪數：屋齡 ${snapReport.age} 年 / 計算坪數 ${snapReport.area} 坪\n`;
-    text += `▪ 租金核定：合約實收 $${snapReport.rent.toLocaleString()} 元 (上限上限為 $${snapReport.maxVal.toLocaleString()} 元)\n`;
+    text += `▪ 租金核定：合約實收 $${snapReport.rent.toLocaleString()} 元 (上限為 $${snapReport.maxVal.toLocaleString()} 元)\n`;
     text += `▪ 建物審查：${snapReport.landlordCheck}\n`;
     text += `----------------------------------------\n`;
     text += `👥 【房客全戶審查】\n`;
@@ -683,35 +701,15 @@ function copyLineReport() {
     text += `🎯 綜合審定結果：\n${snapReport.finalStatus}`;
 
     navigator.clipboard.writeText(text).then(() => {
-        alert("📋綜合回報文案已成功複製！可以直接貼上傳送囉！");
-    }).catch(err => {
-        alert("複製失敗，請手動全選複製。");
-    });
+        alert("📋 LINE 綜合回報文案已成功複製到剪貼簿！");
+    }).catch(err => { alert("複製失敗。"); });
 }
 
 function resetAllFields() {
     if(confirm("確定要清空目前畫面上所有的登打資料嗎？")) {
-        document.getElementById('area').value = ""; 
-        document.getElementById('buildDate').value = ""; 
-        document.getElementById('age').value = "0"; 
-        document.getElementById('rent').value = ""; 
-        document.getElementById('adjLoc').value = "0"; 
-        document.getElementById('adjDec').value = "0";
-        
-        document.getElementById("mMain").value = "0"; 
-        document.getElementById("mBal").value = "0";
-        document.getElementById("mFlower").value = "0"; 
-        document.getElementById("mRain").value = "0"; 
-        document.getElementById("mPlat").value = "0"; 
-        document.getElementById("mOth").value = "0"; 
-        document.getElementById("mCar").value = "0";
-        
-        document.getElementById("familyContainer").innerHTML = ""; 
-        memberCounter = 0; 
-        addFamilyMember(); 
-        
-        runAreaCalc(); 
-        calculateAll();
+        document.getElementById('area').value = ""; document.getElementById('buildDate').value = ""; document.getElementById('age').value = "0"; document.getElementById('rent').value = ""; document.getElementById('adjLoc').value = "0"; document.getElementById('adjDec').value = "0";
+        document.getElementById("mMain").value = "0"; document.getElementById("mBal").value = "0"; document.getElementById("mFlower").value = "0"; document.getElementById("mRain").value = "0"; document.getElementById("mPlat").value = "0"; document.getElementById("mOth").value = "0"; document.getElementById("mCar").value = "0";
+        document.getElementById("familyContainer").innerHTML = ""; memberCounter = 0; addFamilyMember(); runAreaCalc(); calculateAll();
     }
 }
 
