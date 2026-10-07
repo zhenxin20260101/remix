@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東4.9</title>
+    <title>社會住宅綜合試算系統 鎮信/安東5.0</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -64,7 +64,7 @@
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 5px; }
         label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; color: var(--slate); }
         select, input, textarea { width: 100%; height: 42px; padding: 0 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; }
-        textarea { height: 80px; padding: 8px 12px; font-family: inherit; }
+        textarea { height: 85px; padding: 8px 12px; font-family: inherit; }
         input[type="number"] { text-align: right; }
         
         /* 按鈕群 */
@@ -103,10 +103,11 @@
         .land-alert-danger { background: var(--danger-bg); color: var(--danger-text); border: 2px solid #f87171; }
         .land-alert-ok { background: var(--success-bg); color: var(--success-text); border: 2px solid #86efac; }
         
-        /* 修繕產生器樣式 */
+        /* 修繕產生器樣式與標籤引導 */
         .repair-result-card { background: #fefce8; border: 1px solid #fef08a; padding: 12px; border-radius: 8px; margin-top: 10px; }
-        .repair-pill { display: inline-block; background: #e2e8f0; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; margin: 2px; cursor: pointer; }
-        .repair-pill:hover { background: #cbd5e1; }
+        .repair-pill { display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 8px; font-size: 0.82rem; margin: 3px; cursor: pointer; transition: 0.2s; color: #1e293b; }
+        .repair-pill:hover { background: #e0f2fe; border-color: #38bdf8; color: #0284c7; }
+        .repair-pill strong { color: #0d47a1; }
 
         /* 結果面板 */
         .result-sticky { position: sticky; top: 20px; }
@@ -195,7 +196,7 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統4.9</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統5.0</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="bottom-toolbar">
@@ -215,7 +216,7 @@
                 </button>
                 <div id="repairHelper">
                     <div style="font-size: 0.85rem; color: #713f12; margin-bottom: 8px;">
-                        💡 輸入口語說明或關鍵字（如「冷氣不冷」、「沙發塌陷」、「馬桶漏水」），或點選下方常見項目，快速產生報部審查及公文專用標準描述：
+                        💡 輸入口語說明（如「<strong>冰箱不冷</strong>」、「<strong>沙發皮破塌陷</strong>」、「<strong>水箱漏水</strong>」），或利用分類選單，系統自動生成標準公文因果句型：
                     </div>
                     <div class="form-row">
                         <div>
@@ -237,14 +238,17 @@
                         </div>
                     </div>
                     <div>
-                        <label>業務口語描述／搜尋關鍵字</label>
-                        <input type="text" id="repairKeywordInput" placeholder="例如：水箱漏水、冷氣壓縮機故障、門板變形" oninput="searchRepairReason()">
+                        <label>業務口語描述／智慧搜尋（支援模糊白話對照）</label>
+                        <input type="text" id="repairKeywordInput" placeholder="打白話即可，如：冰箱不冷、水箱漏水、門打不開、冷氣滴水" oninput="searchRepairReason()">
                     </div>
                     <div id="repairTagsContainer" style="margin-bottom: 10px;"></div>
                     <div class="repair-result-card">
-                        <label style="color:#854d0e;">產製之高雅專業說法（可自由編輯微調）：</label>
-                        <textarea id="repairResultText" placeholder="產製結果將顯示於此..."></textarea>
-                        <button class="inner-add-btn" style="background:#ca8a04; color:white; padding:6px 14px; font-size:0.85rem;" onclick="copyRepairText()">📋 一鍵複製修繕說明</button>
+                        <label style="color:#854d0e; font-weight:bold;">產製之公文標準高雅說法（物品因…故需…）：</label>
+                        <textarea id="repairResultText" placeholder="點選上方推薦標籤，即刻套用標準因果句型..."></textarea>
+                        <div style="display:flex; justify-content:space-between; margin-top:5px;">
+                            <button class="inner-add-btn" style="background:#ca8a04; color:white; padding:6px 14px; font-size:0.85rem;" onclick="copyRepairText()">📋 一鍵複製修繕說明</button>
+                            <button class="inner-del-btn" style="padding:6px 14px; font-size:0.8rem;" onclick="document.getElementById('repairResultText').value=''">清空說明文字</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -515,167 +519,109 @@ const masterData = {
     }
 };
 
-// ------------------ 修繕詞庫資料庫 ------------------
-const repairDatabase = {
-    "家具設備": {
-        "鞋櫃": [
-            "【維修】門片鉸鏈鬆動更換", "【維修】抽屜滑軌故障更換",
-            "【更換】板材受潮膨脹變形更換", "【更換】櫃體結構損壞無法修復更換"
-        ],
-        "梳妝台": [
-            "【維修】抽屜滑軌故障更換", "【維修】五金零件更換",
-            "【更換】櫃體結構損壞無法承重更換", "【更換】板材受潮變形嚴重腐蝕更換"
-        ],
-        "衣櫃": [
-            "【維修】抽屜滑軌脫軌卡頓調整更換", "【維修】把手螺絲鬆動更換",
-            "【更換】整體結構鬆動傾斜影響安全更換", "【更換】衣櫃櫃體受潮嚴重變形變質更換"
-        ],
-        "床墊": [
-            "【更換】彈簧疲乏凹陷更換", "【更換】內部彈簧穿刺表布具安全疑慮更換"
-        ],
-        "餐桌": [
-            "【更換】桌面破裂無法修復更換", "【更換】支撐結構斷裂傾塌更換", "【更換】木材嚴重變形影響承重更換"
-        ],
-        "床組": [
-            "【更換】主結構斷裂有塌陷危險更換", "【更換】支撐腳斷裂變形更換", "【更換】結構鬆弛有安全疑慮更換"
-        ],
-        "沙發": [
-            "【更換】內部彈簧結構嚴重疲乏塌陷更換", "【更換】內部木質骨架斷裂更換", "【更換】皮革大面積自然老化硬化脫皮更換"
-        ]
-    },
-    "家電及機電設備": {
-        "電視": [
-            "【更換】面板損壞無法修復更換", "【更換】主機板故障無法修復更換"
-        ],
-        "冰箱": [
-            "【維修】溫控系統異常更換另件", "【維修】封條老化更換新品",
-            "【更換】壓縮機故障無法修復更換", "【更換】管線冷媒洩漏無法填補更換設備", "【更換】製冷功能失效更換"
-        ],
-        "洗衣機": [
-            "【維修】進水電磁閥異常更換", "【維修】傳動皮帶鬆脫更換",
-            "【更換】驅動馬達停轉更換設備", "【更換】控制機板受潮/短路/損壞更換", "【更換】馬達軸心傾斜無法修繕更換"
-        ],
-        "洗碗機": [
-            "【維修】噴水旋轉臂阻塞維修", "【維修】進水電磁閥異常更換另件",
-            "【更換】加熱棒組件損壞無法加熱更換", "【更換】主控晶片主機板損壞更換", "【更換】設備老舊泵浦損壞影響運作更換"
-        ],
-        "冷氣": [
-            "【維修】冷媒不足補充", "【維修】排水管阻塞疏通維修", "【維修】濾網及風道清潔維護",
-            "【更換】壓縮機故障更換設備", "【更換】控制電腦主板故障無法修復更換"
-        ],
-        "熱水器": [
-            "【維修】點火裝置異常維修更換", "【更換】安全洩壓裝置失效更換設備"
-        ],
-        "微波爐": [
-            "【維修】操作面板異常更換", "【維修】轉盤軸心裝置卡死更換",
-            "【更換】高壓磁控加熱模組故障更換", "【更換】安全聯鎖裝置損壞更換", "【更換】加熱功能完全失效更換"
-        ],
-        "排油煙機": [
-            "【維修】開關按鍵接觸不良維修", "【維修】風扇扇葉鬆動異音調整",
-            "【更換】排風馬達燒毀故障更換設備", "【更換】抽吸排煙效能喪失更換"
-        ],
-        "瓦斯爐": [
-            "【維修】爐頭積碳阻塞清理", "【維修】電子點火裝置受潮異常維修",
-            "【更換】熄火安全保護裝置故障更換", "【更換】爐具底座鏽蝕破洞影響安全更換"
-        ],
-        "烘碗機": [
-            "【維修】燈管接座接觸不良維修", "【維修】抽屜滑軌卡阻清理調整",
-            "【更換】發熱總成模組燒毀更換", "【更換】電子控制電路板故障更換", "【更換】加熱烘乾功能失效更換"
-        ],
-        "除濕機": [
-            "【更換】壓縮機故障停轉無法除濕更換", "【更換】內部管路破裂洩漏更換", "【更換】配線老化具過熱走火安全疑慮更換"
-        ],
-        "抽風機": [
-            "【維修】逆止風門卡滯更換", "【維修】開關接觸不良更換",
-            "【更換】抽風馬達線圈燒毀更換", "【更換】機體轉軸軸承磨損嚴重異音更換", "【更換】外框塑料日久老化脆裂更換"
-        ],
-        "暖風機": [
-            "【維修】遙控訊號接收模組更換",
-            "【更換】發熱總成故障更換設備", "【更換】主控制電路板短路故障更換", "【更換】馬達軸承卡死運轉過熱跳脫更換"
-        ],
-        "燈具": [
-            "【更換】切換開關模組故障更換", "【更換】內部線路嚴重短路燒毀更換", "【更換】固定基座變形有掉落危險更換"
-        ],
-        "開關／插座面板": [
-            "【更換】內部接點碳化具走火危險更換", "【更換】內部接點燒蝕無法啟閉通電更換"
-        ]
-    },
-    "門窗五金及裝修": {
-        "門片": [
-            "【維修】門片下垂歪斜校正調整", "【維修】鉸鏈螺絲鬆動重新固定", "【維修】門縫密合度公差調整",
-            "【更換】木質門板受潮膨脹嚴重變形無法閉合更換", "【更換】整體結構損壞無法鎖固安全更換"
-        ],
-        "紗窗": [
-            "【更換】紗網大面積破裂更換", "【更換】外框嚴重扭曲變形無法安裝更換", "【更換】導輪磨損碎裂更換整組"
-        ],
-        "水平把手鎖": [
-            "【維修】把手下垂鬆動更換", "【維修】鎖舌連動桿卡住調整", "【維修】內部鎖夾機構維修",
-            "【更換】鎖體內部構造斷裂故障更換", "【更換】把手斷裂脫落更換", "【更換】連動結構嚴重磨損無法扣合更換"
-        ],
-        "喇叭鎖": [
-            "【更換】鎖心內部組件損壞更換", "【更換】內部機構磨損卡死更換", "【更換】鎖舌卡住無法正常開啟更換"
-        ],
-        "窗戶": [
-            "【維修】氣密隔音條鬆脫更換", "【維修】氣密窗外推油壓撐桿阻尼更換",
-            "【更換】窗戶玻璃因破裂更換", "【更換】鋁合金窗框因變形更換", "【更換】連動五金結構斷裂無法鎖閉更換"
-        ],
-        "窗簾": [
-            "【維修】軌道滑輪脫軌更換",
-            "【更換】簾布脆化破損更換", "【更換】捲簾內部捲簧機構疲乏故障更換", "【更換】鋁合金軌道受損變形無法滑動更換"
-        ],
-        "陽台曬衣架": [
-            "【更換】手搖器內部齒輪打滑無法制動更換", "【更換】升降鋼索鏽蝕/斷裂更換", "【更換】曬衣主桿嚴重變形/斷裂更換"
-        ],
-        "牆面": [
-            "【更換】大面積壁癌重新粉刷施作"
-        ]
-    },
-    "衛浴及給排水設備": {
-        "洗臉盆": [
-            "【維修】落水頭拉桿卡阻更換", "【維修】盆底金屬固定支架螺栓生鏽更換", "【維修】排水管防臭墊圈老化滲漏更換",
-            "【更換】盆體外觀龜裂破損更換"
-        ],
-        "淋浴龍頭/水龍頭": [
-            "【維修】冷熱混合切換拉鈕卡阻更換", "【維修】後方進水凡爾滲漏更換",
-            "【更換】龍頭裂損滲水更換", "【更換】內部冷熱混和瓷心故障更換", "【更換】外觀鏽蝕更換"
-        ],
-        "馬桶": [
-            "【更換】外觀龜裂滲漏更換", "【更換】底座嚴重裂損具承重危險更換"
-        ],
-        "馬桶水箱": [
-            "【維修】落水止水皮老化漏水更換", "【維修】進水浮球閥卡阻維修", "【維修】水箱沖水按鈕鍊條鬆脫更換",
-            "【更換】水箱瓷體產生細紋滲水更換", "【更換】內部進水總成脆裂/損壞更換"
-        ],
-        "進水軟管": [
-            "【更換】進水軟管斷裂爆管更換", "【更換】橡膠內管老化硬化脆裂噴水更換"
-        ],
-        "排水管": [
-            "【更換】S/P管破損更換"
-        ],
-        "提籠": [
-            "【更換】提籠鏽蝕穿孔漏水更換"
-        ],
-        "水塔": [
-            "【維修】液位浮球閥移位卡阻調整", "【維修】水塔進出水由令接頭微漏修復",
-            "【更換】不銹鋼塔體鏽蝕穿孔漏水更換", "【更換】水塔支撐腳架嚴重生鏽鏽斷更換", "【更換】塔身嚴重凹陷變形更換"
-        ]
-    },
-    "消防安全設備": {
-        "滅火器": [
-            "【添購】添購合格乾粉滅火器設備"
-        ],
-        "煙霧偵測器（煙偵器）": [
-            "【添購】添購住宅用獨立式煙霧偵測器"
-        ]
-    }
+// ------------------ 結構化修繕詞庫 ------------------
+// 包含物品、具體原因、動作類型，供自動組合「因...故需...」
+const repairItemsMaster = [
+    // 家具設備
+    { cat: "家具設備", item: "鞋櫃", reason: "門片鉸鏈鬆動", act: "更換鉸鏈維修", type: "維修", kw: ["開關不順", "門下垂", "鬆動"] },
+    { cat: "家具設備", item: "鞋櫃", reason: "抽屜滑軌故障", act: "更換滑軌維修", type: "維修", kw: ["卡住", "拉不開", "脫軌"] },
+    { cat: "家具設備", item: "鞋櫃", reason: "板材受潮膨脹變形", act: "更換新品", type: "更換", kw: ["發霉", "膨脹", "泡水", "爛掉"] },
+    { cat: "家具設備", item: "鞋櫃", reason: "櫃體結構損壞無法修復", act: "更換新品", type: "更換", kw: ["壞掉", "破裂", "傾斜", "搖晃"] },
+    { cat: "家具設備", item: "梳妝台", reason: "抽屜滑軌故障", act: "更換滑軌維修", type: "維修", kw: ["卡死", "不好拉"] },
+    { cat: "家具設備", item: "梳妝台", reason: "櫃體結構損壞無法承重", act: "更換新品", type: "更換", kw: ["快塌了", "斷掉"] },
+    { cat: "家具設備", item: "衣櫃", reason: "抽屜滑軌脫軌卡頓", act: "調整更換滑軌", type: "維修", kw: ["卡住", "脫軌"] },
+    { cat: "家具設備", item: "衣櫃", reason: "整體結構鬆動傾斜影響安全", act: "更換新品", type: "更換", kw: ["傾斜", "搖晃", "危險"] },
+    { cat: "家具設備", item: "衣櫃", reason: "衣櫃櫃體受潮嚴重變形變質", act: "更換新品", type: "更換", kw: ["受潮", "發霉", "腐蝕"] },
+    { cat: "家具設備", item: "床墊", reason: "內部彈簧疲乏凹陷", act: "更換新品", type: "更換", kw: ["凹下去", "睡得腰酸", "塌陷"] },
+    { cat: "家具設備", item: "床墊", reason: "內部彈簧穿刺表布具安全疑慮", act: "更換新品", type: "更換", kw: ["彈簧刺出來", "刺破", "危險"] },
+    { cat: "家具設備", item: "餐桌", reason: "桌面破裂且支撐結構斷裂傾塌", act: "更換新品", type: "更換", kw: ["桌面裂開", "腳斷掉", "晃動"] },
+    { cat: "家具設備", item: "床組", reason: "主結構與支撐腳斷裂有塌陷危險", act: "更換新品", type: "更換", kw: ["床腳斷了", "床架塌了", "搖晃"] },
+    { cat: "家具設備", item: "沙發", reason: "內部彈簧結構嚴重疲乏塌陷", act: "更換新品", type: "更換", kw: ["凹陷", "陷下去", "彈簧壞了"] },
+    { cat: "家具設備", item: "沙發", reason: "皮革大面積自然老化硬化脫皮", act: "更換新品", type: "更換", kw: ["脫皮", "掉屑", "皮破了", "龜裂"] },
+
+    // 家電及機電設備
+    { cat: "家電及機電設備", item: "冰箱", reason: "製冷功能失效（完全不冷）", act: "更換設備", type: "更換", kw: ["不冷", "不會涼", "退冰", "壞掉", "不冰"] },
+    { cat: "家電及機電設備", item: "冰箱", reason: "溫控系統異常", act: "更換另件維修", type: "維修", kw: ["不夠冷", "太冷", "結霜", "溫度不對"] },
+    { cat: "家電及機電設備", item: "冰箱", reason: "門體封條老化滲透冷氣", act: "更換新品封條", type: "維修", kw: ["門關不緊", "漏氣", "發霉", "膠條破"] },
+    { cat: "家電及機電設備", item: "冰箱", reason: "壓縮機故障無法修復", act: "更換設備", type: "更換", kw: ["壓縮機不動", "很大聲", "完全不冷", "沒運轉"] },
+    { cat: "家電及機電設備", item: "冰箱", reason: "管線冷媒洩漏無法填補", act: "更換設備", type: "更換", kw: ["漏冷媒", "漏氣", "不冷"] },
+    { cat: "家電及機電設備", item: "冷氣", reason: "冷媒不足", act: "補充冷媒維護", type: "維修", kw: ["不冷", "吹熱風", "不涼", "微涼"] },
+    { cat: "家電及機電設備", item: "冷氣", reason: "排水管阻塞", act: "疏通排水維修", type: "維修", kw: ["滴水", "漏水", "室內漏水", "噴水"] },
+    { cat: "家電及機電設備", item: "冷氣", reason: "壓縮機故障停轉", act: "更換設備", type: "更換", kw: ["壓縮機壞了", "完全不冷", "吹熱風", "跳電"] },
+    { cat: "家電及機電設備", item: "冷氣", reason: "控制電腦主板故障無法修復", act: "更換設備", type: "更換", kw: ["不開機", "遙控沒反應", "主機板壞掉"] },
+    { cat: "家電及機電設備", item: "洗衣機", reason: "進水電磁閥異常", act: "更換另件維修", type: "維修", kw: ["不進水", "一直流水", "漏水"] },
+    { cat: "家電及機電設備", item: "洗衣機", reason: "傳動皮帶鬆脫", act: "更換皮帶維修", type: "維修", kw: ["脫水不動", "不會轉", "異音"] },
+    { cat: "家電及機電設備", item: "洗衣機", reason: "驅動馬達燒毀停轉", act: "更換設備", type: "更換", kw: ["不會動", "焦味", "不動", "冒煙"] },
+    { cat: "家電及機電設備", item: "洗衣機", reason: "馬達軸心傾斜嚴重異音震動", act: "更換設備", type: "更換", kw: ["很吵", "震動很大", "快散了", "怪聲"] },
+    { cat: "家電及機電設備", item: "電視", reason: "面板損壞破裂無法修復", act: "更換設備", type: "更換", kw: ["螢幕破了", "有線條", "黑屏"] },
+    { cat: "家電及機電設備", item: "電視", reason: "主機板故障無法修復", act: "更換設備", type: "更換", kw: ["打不開", "沒畫面", "紅燈閃爍"] },
+    { cat: "家電及機電設備", item: "熱水器", reason: "點火裝置異常", act: "維修更換另件", type: "維修", kw: ["點不著", "沒熱水", "洗冷水", "忽冷忽熱"] },
+    { cat: "家電及機電設備", item: "熱水器", reason: "安全洩壓裝置失效", act: "更換設備", type: "更換", kw: ["漏水", "超壓", "很危險", "滴水"] },
+    { cat: "家電及機電設備", item: "排油煙機", reason: "排風馬達燒毀抽吸效能喪失", act: "更換設備", type: "更換", kw: ["抽不動", "吸不走", "馬達不動", "油煙散不掉"] },
+    { cat: "家電及機電設備", item: "瓦斯爐", reason: "電子點火裝置受潮異常", act: "清理維修", type: "維修", kw: ["點不著", "沒有火", "卡嗒卡嗒"] },
+    { cat: "家電及機電設備", item: "瓦斯爐", reason: "熄火安全保護裝置故障且底座鏽蝕", act: "更換設備", type: "更換", kw: ["漏氣", "火自己熄掉", "鏽爛", "危險"] },
+    { cat: "家電及機電設備", item: "除濕機", reason: "壓縮機故障停轉無法除濕", act: "更換設備", type: "更換", kw: ["除不出水", "不動", "不吸水"] },
+    { cat: "家電及機電設備", item: "抽風機", reason: "抽風馬達線圈燒毀運轉卡死", act: "更換設備", type: "更換", kw: ["很吵", "不動", "怪聲", "浴室很潮濕"] },
+    { cat: "家電及機電設備", item: "開關／插座面板", reason: "內部接點碳化燒蝕具走火危險", act: "更換新品面板", type: "更換", kw: ["沒電", "黑黑的", "燒焦", "鬆掉", "冒火花"] },
+
+    // 門窗、五金及裝修
+    { cat: "門窗五金及裝修", item: "門片", reason: "木質門板受潮膨脹嚴重變形無法閉合", act: "更換新品", type: "更換", kw: ["關不起來", "卡住", "關不上", "受潮", "磨地板"] },
+    { cat: "門窗五金及裝修", item: "門片", reason: "門片下垂歪斜與鉸鏈螺絲鬆動", act: "重新固定校正", type: "維修", kw: ["歪掉", "下垂", "鬆動"] },
+    { cat: "門窗五金及裝修", item: "水平把手鎖", reason: "鎖體內部構造斷裂故障無法扣合", act: "更換新品鎖具", type: "更換", kw: ["開不了", "鎖不上", "把手斷了", "轉不動", "反鎖"] },
+    { cat: "門窗五金及裝修", item: "喇叭鎖", reason: "鎖心內部機構磨損卡死", act: "更換新品鎖具", type: "更換", kw: ["轉不開", "卡死", "鑰匙拔不出來"] },
+    { cat: "門窗五金及裝修", item: "窗戶", reason: "連動五金結構斷裂無法鎖閉且玻璃破損", act: "更換修復", type: "更換", kw: ["關不起來", "風吹很大聲", "玻璃破掉"] },
+    { cat: "門窗五金及裝修", item: "紗窗", reason: "紗網大面積破裂且外框扭曲變形", act: "更換整組", type: "更換", kw: ["破洞", "蚊子飛進來", "掉下來"] },
+    { cat: "門窗五金及裝修", item: "陽台曬衣架", reason: "升降鋼索鏽蝕斷裂且手搖器齒輪打滑", act: "更換新品", type: "更換", kw: ["升不上去", "掉下來", "線斷了", "搖不動"] },
+    { cat: "門窗五金及裝修", item: "牆面", reason: "大面積壁癌與漆面剝落", act: "重新批土抗滲粉刷施作", type: "更換", kw: ["掉漆", "壁癌", "漏水", "發霉", "掉粉"] },
+
+    // 衛浴及給排水設備
+    { cat: "衛浴及給排水設備", item: "馬桶水箱", reason: "落水止水皮老化滲透漏水", act: "更換另件維修", type: "維修", kw: ["水一直流", "漏水", "水箱漏水", "抽水不止"] },
+    { cat: "衛浴及給排水設備", item: "馬桶水箱", reason: "水箱瓷體產生細紋滲水且進水總成脆裂", act: "更換新品設備", type: "更換", kw: ["水箱破掉", "外漏", "裂痕", "地上積水"] },
+    { cat: "衛浴及給排水設備", item: "馬桶", reason: "外觀龜裂滲漏具承重危險", act: "更換新品馬桶", type: "更換", kw: ["馬桶裂開", "漏水", "怕坐破", "底座搖晃"] },
+    { cat: "衛浴及給排水設備", item: "淋浴水龍頭", reason: "內部冷熱混合瓷心故障裂損滲水", act: "更換新品", type: "更換", kw: ["水龍頭滴水", "關不緊", "漏水", "冷熱水切不過去"] },
+    { cat: "衛浴及給排水設備", item: "洗臉盆", reason: "盆體外觀龜裂破損", act: "更換新品臉盆", type: "更換", kw: ["洗手台裂開", "快掉下來", "漏水"] },
+    { cat: "衛浴及給排水設備", item: "洗臉盆", reason: "落水頭拉桿卡阻且防臭墊圈老化滲漏", act: "更換另件維修", type: "維修", kw: ["水塞卡住", "下面漏水", "臭味"] },
+    { cat: "衛浴及給排水設備", item: "進水軟管", reason: "橡膠內管老化硬化脆裂爆管滲水", act: "更換新品軟管", type: "更換", kw: ["爆管", "噴水", "軟管漏水", "淹水"] },
+    { cat: "衛浴及給排水設備", item: "排水管", reason: "S/P排水分管破損漏水", act: "更換新品管路", type: "更換", kw: ["下面漏水", "排水管破掉", "臭氣"] },
+    { cat: "衛浴及給排水設備", item: "水塔", reason: "不銹鋼塔體鏽蝕穿孔漏水", act: "更換新品水塔", type: "更換", kw: ["頂樓漏水", "水塔破洞", "沒水"] },
+
+    // 消防安全設備
+    { cat: "消防安全設備", item: "滅火器", reason: "原有滅火器已逾有效期限或配備不足", act: "添購合格乾粉滅火器設備", type: "添購", kw: ["過期", "沒有滅火器", "安檢", "不夠"] },
+    { cat: "消防安全設備", item: "煙霧偵測器", reason: "居室未設置消防警報設備或原有設備失效", act: "添購住宅用獨立式煙霧偵測器", type: "添購", kw: ["沒煙偵器", "警報器", "消防檢查", "住警器"] }
+];
+
+// 口語擴充映射字典 (白話對照)
+const colloquialMap = {
+    "不冷": ["製冷功能失效", "冷媒不足", "壓縮機故障"],
+    "不冰": ["製冷功能失效", "冷媒不足", "溫控系統異常"],
+    "吹熱風": ["冷媒不足", "壓縮機故障", "製冷功能失效"],
+    "漏水": ["排水管阻塞", "止水皮老化", "滲漏", "龜裂滲漏", "爆管", "穿孔漏水"],
+    "滴水": ["排水管阻塞", "止水皮老化", "滲漏", "冷熱混合瓷心故障"],
+    "洗冷水": ["點火裝置異常", "沒熱水"],
+    "點不著": ["點火裝置異常", "電子點火裝置受潮"],
+    "打不開": ["鎖舌連動桿卡住", "鎖心內部機構磨損卡死", "變形無法閉合"],
+    "卡住": ["滑軌故障", "卡死", "連動桿卡住", "門板受潮膨脹"],
+    "很吵": ["馬達軸心傾斜", "風扇扇葉鬆動異音", "軸承磨損嚴重異音"],
+    "怪聲": ["馬達軸心傾斜", "軸承磨損嚴重異音"],
+    "破掉": ["破裂", "外框嚴重扭曲", "面板損壞", "大面積破裂"],
+    "塌陷": ["疲乏凹陷", "彈簧結構嚴重疲乏塌陷", "斷裂傾塌"],
+    "脫皮": ["自然老化硬化脫皮", "壁癌"]
 };
+
+// 組合標準因果句型：〔物品〕因〔具體故障原因〕，故需〔維修／更換／添購〕。
+function formatFormalStatement(item, reason, act) {
+    return `${item}因${reason}，故需${act}。`;
+}
 
 function populateRepairItems() {
     const cat = document.getElementById('repairCategorySelect').value;
     const itemSelect = document.getElementById('repairItemSelect');
     itemSelect.innerHTML = '<option value="">-- 請選擇設備項目 --</option>';
-    if (!cat || !repairDatabase[cat]) return;
-    Object.keys(repairDatabase[cat]).forEach(item => {
+    if (!cat) return;
+    
+    let itemsSet = new Set();
+    repairItemsMaster.filter(r => r.cat === cat).forEach(r => itemsSet.add(r.item));
+    itemsSet.forEach(item => {
         let opt = document.createElement('option'); opt.value = item; opt.innerText = item; itemSelect.appendChild(opt);
     });
     populateRepairReasons();
@@ -686,50 +632,87 @@ function populateRepairReasons() {
     const item = document.getElementById('repairItemSelect').value;
     const container = document.getElementById('repairTagsContainer');
     container.innerHTML = "";
-    if (!cat || !item || !repairDatabase[cat][item]) return;
-    repairDatabase[cat][item].forEach(reason => {
+    if (!cat && !item) return;
+
+    let matched = repairItemsMaster.filter(r => (!cat || r.cat === cat) && (!item || r.item === item));
+    matched.forEach(obj => {
+        let sentence = formatFormalStatement(obj.item, obj.reason, obj.act);
         let span = document.createElement('span');
         span.className = 'repair-pill';
-        span.innerText = reason;
-        span.onclick = () => selectRepairText(`【${item}】` + reason);
+        span.innerHTML = `<strong>[${obj.type}] ${obj.item}</strong>：${obj.reason}`;
+        span.onclick = () => selectRepairText(sentence);
         container.appendChild(span);
     });
 }
 
+// 智慧語意與口語比對引擎
 function searchRepairReason() {
-    const kw = document.getElementById('repairKeywordInput').value.trim().toLowerCase();
+    const rawKw = document.getElementById('repairKeywordInput').value.trim();
     const container = document.getElementById('repairTagsContainer');
     container.innerHTML = "";
-    if (!kw) return;
-    let count = 0;
-    for (let cat in repairDatabase) {
-        for (let item in repairDatabase[cat]) {
-            repairDatabase[cat][item].forEach(reason => {
-                if (item.toLowerCase().includes(kw) || reason.toLowerCase().includes(kw)) {
-                    if (count < 12) {
-                        let span = document.createElement('span');
-                        span.className = 'repair-pill';
-                        span.innerText = `[${item}] ${reason}`;
-                        span.onclick = () => selectRepairText(`【${item}】` + reason);
-                        container.appendChild(span);
-                        count++;
-                    }
-                }
-            });
+    if (!rawKw) return;
+
+    const lowerKw = rawKw.toLowerCase();
+    
+    // 找出所有口語擴充詞
+    let expandedKeywords = [lowerKw];
+    for (let slang in colloquialMap) {
+        if (lowerKw.includes(slang)) {
+            expandedKeywords.push(...colloquialMap[slang]);
         }
     }
+
+    let matchedList = [];
+
+    repairItemsMaster.forEach(obj => {
+        let score = 0;
+        // 1. 直接命中物品名（如：冰箱、冷氣、沙發）
+        if (lowerKw.includes(obj.item.toLowerCase())) score += 10;
+        
+        // 2. 命中原因文字
+        if (obj.reason.toLowerCase().includes(lowerKw)) score += 5;
+        
+        // 3. 命中白話關鍵字清單
+        if (obj.kw && obj.kw.some(k => lowerKw.includes(k.toLowerCase()))) score += 6;
+
+        // 4. 命中了擴充同義詞
+        expandedKeywords.forEach(ek => {
+            if (obj.reason.toLowerCase().includes(ek.toLowerCase())) score += 4;
+        });
+
+        if (score > 0) {
+            matchedList.push({ obj, score });
+        }
+    });
+
+    // 依相關性排序
+    matchedList.sort((a, b) => b.score - a.score);
+
+    if (matchedList.length === 0) {
+        container.innerHTML = `<div style="font-size:0.85rem; color:#b45309; padding:4px;">💡 查無直接符合字詞，您可以嘗試搜尋「冷氣」、「冰箱」、「馬桶」、「漏水」、「不冷」等基本詞。</div>`;
+        return;
+    }
+
+    matchedList.slice(0, 15).forEach(({ obj }) => {
+        let sentence = formatFormalStatement(obj.item, obj.reason, obj.act);
+        let span = document.createElement('span');
+        span.className = 'repair-pill';
+        span.innerHTML = `<strong>[${obj.type}] ${obj.item}</strong>：${obj.reason}`;
+        span.onclick = () => selectRepairText(sentence);
+        container.appendChild(span);
+    });
 }
 
-function selectRepairText(text) {
+function selectRepairText(sentence) {
     const ta = document.getElementById('repairResultText');
-    if (ta.value) ta.value += "\n" + text;
-    else ta.value = text;
+    if (ta.value) ta.value += "\n" + sentence;
+    else ta.value = sentence;
 }
 
 function copyRepairText() {
     const t = document.getElementById('repairResultText').value;
     if (!t) { alert("尚未產製任何修繕說明！"); return; }
-    navigator.clipboard.writeText(t).then(() => alert("📋 修繕專業說明已複製至剪貼簿！"));
+    navigator.clipboard.writeText(t).then(() => alert("📋 修繕標準公文語句已複製至剪貼簿！"));
 }
 
 // ------------------ 土地持分試算模組 (200+ 筆) ------------------
@@ -830,7 +813,6 @@ function syncLandPage4Mirror(count, totalOrg, totalAct) {
         const own = r.querySelector('.land-own-input').value || "1";
         const act = parseFloat(r.querySelector('.land-act-input').value) || 0;
 
-        // 列印只輸出有值的列
         if (org > 0 || act > 0) {
             printedIndex++;
             let tr = document.createElement('tr');
@@ -1164,7 +1146,7 @@ document.getElementById('today').innerText = new Date().toLocaleDateString('zh-T
 
 initDistricts(); 
 addFamilyMember(); 
-addBatchLandRows(30); // 預載 30 筆土地表格
+addBatchLandRows(30); 
 runAreaCalc(); 
 calculateAll();
 </script>
