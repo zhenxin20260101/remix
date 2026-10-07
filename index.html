@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東4.8</title>
+    <title>社會住宅綜合試算系統 鎮信/安東4.9</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -20,6 +20,9 @@
         }
         * { box-sizing: border-box; }
         body { font-family: -apple-system, "Segoe UI", "Microsoft JhengHei", sans-serif; background-color: var(--bg); margin: 0; padding: 20px 20px 100px 20px; color: #334155; }
+        
+        .main-header { text-align: center; color: var(--primary); margin-bottom: 5px; }
+        .date-line { text-align: center; margin-bottom: 20px; color: #555; font-size: 0.95rem; }
         
         /* 置底固定工具列 */
         .bottom-toolbar { 
@@ -50,7 +53,6 @@
         .member-card .member-header { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #cbd5e1; }
         .member-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 20px; }
         
-        /* 內部項目 */
         .member-item { display: flex; flex-direction: column; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .member-item > span { font-size: 0.85rem; color: var(--primary-dark); font-weight: bold; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
         .member-calc-hint { font-size: 0.8rem; color: var(--danger-text); margin-top: 4px; text-align: right; font-weight: bold; }
@@ -61,12 +63,15 @@
         /* 表單選單與輸入 */
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 5px; }
         label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; color: var(--slate); }
-        select, input { width: 100%; height: 42px; padding: 0 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; }
+        select, input, textarea { width: 100%; height: 42px; padding: 0 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; }
+        textarea { height: 80px; padding: 8px 12px; font-family: inherit; }
         input[type="number"] { text-align: right; }
         
         /* 按鈕群 */
         button { border: none; border-radius: 8px; cursor: pointer; padding: 10px 20px; font-size: 0.95rem; font-weight: bold; transition: background 0.2s; }
         .drawer-btn { background: #f0f9ff; border: 2px dashed var(--accent); color: #2980b9; width: 100%; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .drawer-btn.repair-btn { background: #fefce8; border-color: #eab308; color: #a16207; }
+        .drawer-btn.land-btn { background: #f0fdf4; border-color: #22c55e; color: #15803d; }
         .add-btn { background: var(--primary-dark); color: white; width: 100%; padding: 12px; font-size: 1rem; }
         .inner-add-btn { background: #e0f2fe; color: #0369a1; padding: 2px 8px; font-size: 0.75rem; border-radius: 4px; }
         .inner-del-btn { background: #fee2e2; color: #b91c1c; padding: 5px 8px; font-size: 0.8rem; border-radius: 6px; height: 34px; }
@@ -77,7 +82,7 @@
         .copy-line-btn { background: #24b04b; color: white; width: 100%; padding: 12px; font-size: 1rem; border-radius: 10px; margin-top: 15px; box-shadow: 0 4px 8px rgba(36,176,75,0.2); }
         
         /* 謄本換算表格 */
-        #areaCalculator { display: none; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 15px; }
+        #areaCalculator, #repairHelper, #landCalculator { display: none; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 15px; }
         .calc-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         .calc-table th, .calc-table td { padding: 8px; border: 1px solid #e2e8f0; text-align: center; }
         .calc-table input { height: 32px; border-width: 1px; color: var(--danger-text); text-align: center; margin-bottom: 0; padding: 0 5px; width: 100%; }
@@ -92,6 +97,17 @@
         .area-summary-item { font-size: 0.8rem; font-weight: bold; }
         .area-summary-item span { display: block; font-size: 1.1rem; color: var(--danger-text); }
         
+        /* 土地清冊樣式 */
+        .land-table-container { max-height: 480px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 10px; }
+        .land-summary-card { padding: 12px; border-radius: 8px; margin-bottom: 10px; font-weight: bold; font-size: 0.95rem; }
+        .land-alert-danger { background: var(--danger-bg); color: var(--danger-text); border: 2px solid #f87171; }
+        .land-alert-ok { background: var(--success-bg); color: var(--success-text); border: 2px solid #86efac; }
+        
+        /* 修繕產生器樣式 */
+        .repair-result-card { background: #fefce8; border: 1px solid #fef08a; padding: 12px; border-radius: 8px; margin-top: 10px; }
+        .repair-pill { display: inline-block; background: #e2e8f0; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; margin: 2px; cursor: pointer; }
+        .repair-pill:hover { background: #cbd5e1; }
+
         /* 結果面板 */
         .result-sticky { position: sticky; top: 20px; }
         .result-card { background: white; border: 2px solid #e0f2fe; border-radius: 16px; padding: 20px; box-shadow: 0 6px 15px rgba(0,0,0,0.03); margin-bottom: 20px; }
@@ -115,8 +131,8 @@
         
         /* 列印優化樣式 */
         @media print {
-            html, body { background: white; color: #000; padding: 0; font-size: 11pt; }
-            button, .drawer-btn, .add-btn, .bottom-toolbar, .delete-member-btn, .member-calc-hint, .inner-add-btn, .inner-del-btn, .copy-line-btn, .edu-hint { display: none !important; }
+            html, body { background: white; color: #000; padding: 0; font-size: 10pt; }
+            button, .drawer-btn, .add-btn, .bottom-toolbar, .delete-member-btn, .member-calc-hint, .inner-add-btn, .inner-del-btn, .copy-line-btn, .edu-hint, #repairHelper { display: none !important; }
             
             .main-grid, .result-side { display: block !important; }
             .result-sticky { position: relative !important; top: 0 !important; }
@@ -128,7 +144,7 @@
                 background: transparent !important; 
                 color: #000 !important; 
                 box-shadow: none !important;
-                height: 26px !important; 
+                height: 24px !important; 
                 padding: 0 !important;
                 margin-bottom: 4px !important; 
             }
@@ -146,7 +162,7 @@
                 margin-top: 4px !important;
                 padding: 6px 12px !important;
                 background: transparent !important; 
-                font-size: 11pt !important;
+                font-size: 10pt !important;
             }
             .qualification-result.pass { color: var(--success-text) !important; font-weight: bold; }
             .qualification-result.fail { color: var(--danger-text) !important; font-weight: bold; }
@@ -154,10 +170,11 @@
             .print-hide-item { display: none !important; }
 
             #areaCalculator { display: block !important; border: 1px solid #000 !important; page-break-after: always; padding: 10px !important; }
-            #landlordCoreInputs, #print_landlord_result, .tenant-section, #print_tenant_result { display: none !important; }
+            #landlordCoreInputs, #print_landlord_result, .tenant-section, #print_tenant_result, #landCalculator { display: none !important; }
 
             .print-page2-rent { display: block !important; page-break-before: always; page-break-after: always; }
-            .print-page3-tenant { display: block !important; page-break-before: always; }
+            .print-page3-tenant { display: block !important; page-break-before: always; page-break-after: always; }
+            .print-page4-land { display: block !important; page-break-before: always; }
             
             .section { box-shadow: none; border: 1px solid #000; margin-bottom: 10px; padding: 10px; }
             .sub-title { margin: 8px 0 4px 0 !important; font-size: 0.95rem !important; }
@@ -167,23 +184,23 @@
             .member-grid { gap: 8px 12px; }
             .member-item { border: 1px solid #aaa !important; background: #fff !important; padding: 4px 8px; }
             .member-item > span { margin-bottom: 4px !important; font-size: 0.8rem !important; }
-            .item-row input { height: 24px !important; }
-            .total-box { margin-top: 6px !important; padding: 8px !important; font-size: 1rem !important; }
+            .item-row input { height: 22px !important; }
+            .total-box { margin-top: 6px !important; padding: 8px !important; font-size: 0.95rem !important; }
             .result-card { border: 2px solid #000; background: white !important; padding: 10px; }
             .stamp { position: absolute; top: 35%; opacity: 0.22; display: block !important; }
         }
 
-        .print-page2-rent, .print-page3-tenant { display: none; }
+        .print-page2-rent, .print-page3-tenant, .print-page4-land { display: none; }
     </style>
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統4.8</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統4.9</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="bottom-toolbar">
-    <button class="print-btn" onclick="window.print()">🖨️ 開始列印</button>
-    <button class="reset-btn" onclick="resetAllFields()">🔄 清空所有欄位</button>
+    <button class="print-btn" onclick="window.print()">🖨️ 開始列印 (四分頁完整報表)</button>
+    <button class="reset-btn" onclick="resetAllFields()">🔄 清空重置所有欄位</button>
 </div>
 
 <div class="container">
@@ -191,12 +208,53 @@
         
         <!-- 左側主輸入流 -->
         <div class="input-flow">
+            <!-- 工具區：修繕高雅專業說明產製器 -->
+            <div class="section" style="border-top-color: #eab308;">
+                <button class="drawer-btn repair-btn" onclick="toggleDrawer('repairHelper', 'repairArrow')">
+                    <span>🛠️ 實務工具：社宅家具家電設備修繕／更換高雅專業說明產製器</span><span id="repairArrow">▼</span>
+                </button>
+                <div id="repairHelper">
+                    <div style="font-size: 0.85rem; color: #713f12; margin-bottom: 8px;">
+                        💡 輸入口語說明或關鍵字（如「冷氣不冷」、「沙發塌陷」、「馬桶漏水」），或點選下方常見項目，快速產生報部審查及公文專用標準描述：
+                    </div>
+                    <div class="form-row">
+                        <div>
+                            <label>快速分類檢索</label>
+                            <select id="repairCategorySelect" onchange="populateRepairItems()">
+                                <option value="">-- 請選擇設備類別 --</option>
+                                <option value="家具設備">一、家具設備（沙發、衣櫃、床組等）</option>
+                                <option value="家電及機電設備">二、家電及機電（冷氣、冰箱、熱水器等）</option>
+                                <option value="門窗五金及裝修">三、門窗、五金及裝修（鎖具、門窗、壁癌）</option>
+                                <option value="衛浴及給排水設備">四、衛浴及給排水（馬桶、龍頭、水塔等）</option>
+                                <option value="消防安全設備">五、消防安全設備（滅火器、煙偵器）</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>具體設備項目</label>
+                            <select id="repairItemSelect" onchange="populateRepairReasons()">
+                                <option value="">-- 請先選類別 --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label>業務口語描述／搜尋關鍵字</label>
+                        <input type="text" id="repairKeywordInput" placeholder="例如：水箱漏水、冷氣壓縮機故障、門板變形" oninput="searchRepairReason()">
+                    </div>
+                    <div id="repairTagsContainer" style="margin-bottom: 10px;"></div>
+                    <div class="repair-result-card">
+                        <label style="color:#854d0e;">產製之高雅專業說法（可自由編輯微調）：</label>
+                        <textarea id="repairResultText" placeholder="產製結果將顯示於此..."></textarea>
+                        <button class="inner-add-btn" style="background:#ca8a04; color:white; padding:6px 14px; font-size:0.85rem;" onclick="copyRepairText()">📋 一鍵複製修繕說明</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- 第一部分：建物面積與租金 -->
             <div class="section landlord-section">
                 <div class="section-title">第一部分：建物面積與租金評定</div>
                 
-                <button class="drawer-btn" onclick="toggleDrawer()">
-                    <span>謄本面積換算</span><span id="drawerArrow">▼</span>
+                <button class="drawer-btn" onclick="toggleDrawer('areaCalculator', 'drawerArrow')">
+                    <span>衡量工具：謄本面積換算 (此區塊列印時自動獨立為第一頁)</span><span id="drawerArrow">▼</span>
                 </button>
                 
                 <div id="areaCalculator">
@@ -231,7 +289,7 @@
                             <tr style="background:#ebf8ff;"><td style="color:blue; font-weight:bold;">車位扣除</td><td><input type="number" id="mCar" value="0" oninput="runAreaCalc()"></td><td><input type="number" id="dCar" value="1" oninput="runAreaCalc()"></td><td><input type="number" id="nCar" value="0" oninput="runAreaCalc()"></td></tr>
                         </tbody>
                     </table>
-                    <div class="edu-hint">💡若共有部分包含獨立編號之車位，請將該公設總面積填入「車位扣除」，並依據建物登記謄本登載之車位權利範圍確實輸入。</div>
+                    <div class="edu-hint">💡 實務提醒：若共有部分包含獨立編號之車位，請將該公設總面積填入「車位扣除」，並依據建物登記謄本登載之車位權利範圍（持分分母、分子）確實輸入，以防未扣除車位導致租金上限虛增遭退件。</div>
                     
                     <div class="area-summary-box">
                         <div class="area-summary-item">專有面積(m²) <span id="outPri">0</span></div>
@@ -277,9 +335,45 @@
                 </div>
             </div>
             
-            <!-- 區塊二：房客資料登打區 -->
+            <!-- 區塊二：房客資料登打區與土地持分試算器 -->
             <div class="section tenant-section" id="webTenantSection">
                 <div class="section-title">第二部分：房客家庭成員資料登打</div>
+
+                <!-- 土地大批量持分試算器折疊區 -->
+                <button class="drawer-btn land-btn" onclick="toggleDrawer('landCalculator', 'landArrow')">
+                    <span>🌾 實務工具：承租人共有土地持分大批量試算器 (200+筆清冊)</span><span id="landArrow">▼</span>
+                </button>
+                <div id="landCalculator">
+                    <div id="landAlertBox" class="land-summary-card land-alert-ok">
+                        <div>土地筆數：<span id="landCountDisplay">0</span> 筆 | 土地公告現值總額：<span id="landTotalOrgDisplay">0</span> 元</div>
+                        <div style="font-size:1.15rem; margin-top:4px;">承租人持分實際金額總額：<span id="landTotalActDisplay">0</span> 元</div>
+                        <div id="landWarningText" style="display:none; color:var(--danger-text); margin-top:6px; font-weight:800;">
+                            ⚠️ 警示：承租人土地持分總額已超過 705 萬元限額！請注意社宅審查資格。
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <button class="inner-add-btn" style="background:#16a34a; color:white; padding:8px 16px; font-size:0.9rem;" onclick="addBatchLandRows(50)">➕ 批次新增 50 筆清單</button>
+                        <button class="inner-add-btn" style="background:#2563eb; color:white; padding:8px 16px; font-size:0.9rem;" onclick="applyLandTotalToApplicant()">📥 將實際金額帶入第1位承租人土地現值</button>
+                        <button class="inner-del-btn" style="padding:8px 16px;" onclick="clearAllLandRows()">🗑️ 清空土地清冊</button>
+                    </div>
+                    <div class="land-table-container">
+                        <table class="calc-table" id="landMainTable">
+                            <thead>
+                                <tr style="background:#f1f5f9; position:sticky; top:0; z-index:2;">
+                                    <th style="width:50px;">序號</th>
+                                    <th>土地地號（如：中壢區中壢段123地號）</th>
+                                    <th style="width:140px;">土地現值 (元)</th>
+                                    <th style="width:100px;">共有人數</th>
+                                    <th style="width:140px;">實際金額 (元)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="landTableBody">
+                                <!-- 動態渲染土地項目 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div id="familyContainer">
                     <!-- JavaScript 動態生成卡片 -->
                 </div>
@@ -319,7 +413,7 @@
     <!-- 🖨️ 列印專用隱藏分頁鏡像 -->
     <div class="print-page2-rent">
         <div class="section" style="border-top: 4px solid var(--accent);">
-            <div class="section-title">第一部分：房東建物租金審查試算表</div>
+            <div class="section-title">第一部分補件：房東建物租金審查試算表</div>
             <div id="page2_inputs_mirror"></div>
             <div style="margin-top:15px;" id="page2_result_mirror"></div>
         </div>
@@ -327,9 +421,29 @@
 
     <div class="print-page3-tenant">
         <div class="section" style="border-top: 4px solid var(--success);">
-            <div class="section-title">第二部分：房客資格審查與財產清單</div>
+            <div class="section-title">第二部分補件：房客資格審查與財產清單</div>
             <div id="page3_family_mirror"></div>
             <div style="margin-top:15px;" id="page3_result_mirror"></div>
+        </div>
+    </div>
+
+    <!-- 🖨️ 列印專用第 4 頁：土地持分明細附件清冊 -->
+    <div class="print-page4-land">
+        <div class="section" style="border-top: 4px solid #16a34a;">
+            <div class="section-title">承租人共有土地持分明細附件清冊 (大批量審查專用)</div>
+            <div id="page4_summary_mirror" class="land-summary-card" style="border:1px solid #000; margin-bottom:12px;"></div>
+            <table class="calc-table" id="page4_table_mirror" style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#f1f5f9;">
+                        <th style="width:40px; border:1px solid #000;">序號</th>
+                        <th style="border:1px solid #000;">地號</th>
+                        <th style="width:120px; border:1px solid #000;">土地公告現值(元)</th>
+                        <th style="width:80px; border:1px solid #000;">共有人數</th>
+                        <th style="width:130px; border:1px solid #000;">實際持分金額(元)</th>
+                    </tr>
+                </thead>
+                <tbody id="page4_tbody_mirror"></tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -337,7 +451,7 @@
 <div id="stamp" class="stamp"></div>
 
 <script>
-// 114 年租金區間表資料庫：嚴謹校正！桃園市依官方數據不包含「其他」，彰投兩縣市完好保留「其他」保底。
+// 114 年租金區間表資料庫：桃園市 13 區無「其他」；彰投保留「其他」
 const masterData = {
     "桃園市": {
         "桃園區": { "整層": [780,770,755,735,720,700,680,650,620], "套房": [1120,1100,1080,1055,1025,1000,970,930,885] },
@@ -401,7 +515,338 @@ const masterData = {
     }
 };
 
-// 嚴謹生成選單邏輯：桃園市13區完全獨立，只有彰化與南投最尾巴有「其他」
+// ------------------ 修繕詞庫資料庫 ------------------
+const repairDatabase = {
+    "家具設備": {
+        "鞋櫃": [
+            "【維修】門片鉸鏈鬆動更換", "【維修】抽屜滑軌故障更換",
+            "【更換】板材受潮膨脹變形更換", "【更換】櫃體結構損壞無法修復更換"
+        ],
+        "梳妝台": [
+            "【維修】抽屜滑軌故障更換", "【維修】五金零件更換",
+            "【更換】櫃體結構損壞無法承重更換", "【更換】板材受潮變形嚴重腐蝕更換"
+        ],
+        "衣櫃": [
+            "【維修】抽屜滑軌脫軌卡頓調整更換", "【維修】把手螺絲鬆動更換",
+            "【更換】整體結構鬆動傾斜影響安全更換", "【更換】衣櫃櫃體受潮嚴重變形變質更換"
+        ],
+        "床墊": [
+            "【更換】彈簧疲乏凹陷更換", "【更換】內部彈簧穿刺表布具安全疑慮更換"
+        ],
+        "餐桌": [
+            "【更換】桌面破裂無法修復更換", "【更換】支撐結構斷裂傾塌更換", "【更換】木材嚴重變形影響承重更換"
+        ],
+        "床組": [
+            "【更換】主結構斷裂有塌陷危險更換", "【更換】支撐腳斷裂變形更換", "【更換】結構鬆弛有安全疑慮更換"
+        ],
+        "沙發": [
+            "【更換】內部彈簧結構嚴重疲乏塌陷更換", "【更換】內部木質骨架斷裂更換", "【更換】皮革大面積自然老化硬化脫皮更換"
+        ]
+    },
+    "家電及機電設備": {
+        "電視": [
+            "【更換】面板損壞無法修復更換", "【更換】主機板故障無法修復更換"
+        ],
+        "冰箱": [
+            "【維修】溫控系統異常更換另件", "【維修】封條老化更換新品",
+            "【更換】壓縮機故障無法修復更換", "【更換】管線冷媒洩漏無法填補更換設備", "【更換】製冷功能失效更換"
+        ],
+        "洗衣機": [
+            "【維修】進水電磁閥異常更換", "【維修】傳動皮帶鬆脫更換",
+            "【更換】驅動馬達停轉更換設備", "【更換】控制機板受潮/短路/損壞更換", "【更換】馬達軸心傾斜無法修繕更換"
+        ],
+        "洗碗機": [
+            "【維修】噴水旋轉臂阻塞維修", "【維修】進水電磁閥異常更換另件",
+            "【更換】加熱棒組件損壞無法加熱更換", "【更換】主控晶片主機板損壞更換", "【更換】設備老舊泵浦損壞影響運作更換"
+        ],
+        "冷氣": [
+            "【維修】冷媒不足補充", "【維修】排水管阻塞疏通維修", "【維修】濾網及風道清潔維護",
+            "【更換】壓縮機故障更換設備", "【更換】控制電腦主板故障無法修復更換"
+        ],
+        "熱水器": [
+            "【維修】點火裝置異常維修更換", "【更換】安全洩壓裝置失效更換設備"
+        ],
+        "微波爐": [
+            "【維修】操作面板異常更換", "【維修】轉盤軸心裝置卡死更換",
+            "【更換】高壓磁控加熱模組故障更換", "【更換】安全聯鎖裝置損壞更換", "【更換】加熱功能完全失效更換"
+        ],
+        "排油煙機": [
+            "【維修】開關按鍵接觸不良維修", "【維修】風扇扇葉鬆動異音調整",
+            "【更換】排風馬達燒毀故障更換設備", "【更換】抽吸排煙效能喪失更換"
+        ],
+        "瓦斯爐": [
+            "【維修】爐頭積碳阻塞清理", "【維修】電子點火裝置受潮異常維修",
+            "【更換】熄火安全保護裝置故障更換", "【更換】爐具底座鏽蝕破洞影響安全更換"
+        ],
+        "烘碗機": [
+            "【維修】燈管接座接觸不良維修", "【維修】抽屜滑軌卡阻清理調整",
+            "【更換】發熱總成模組燒毀更換", "【更換】電子控制電路板故障更換", "【更換】加熱烘乾功能失效更換"
+        ],
+        "除濕機": [
+            "【更換】壓縮機故障停轉無法除濕更換", "【更換】內部管路破裂洩漏更換", "【更換】配線老化具過熱走火安全疑慮更換"
+        ],
+        "抽風機": [
+            "【維修】逆止風門卡滯更換", "【維修】開關接觸不良更換",
+            "【更換】抽風馬達線圈燒毀更換", "【更換】機體轉軸軸承磨損嚴重異音更換", "【更換】外框塑料日久老化脆裂更換"
+        ],
+        "暖風機": [
+            "【維修】遙控訊號接收模組更換",
+            "【更換】發熱總成故障更換設備", "【更換】主控制電路板短路故障更換", "【更換】馬達軸承卡死運轉過熱跳脫更換"
+        ],
+        "燈具": [
+            "【更換】切換開關模組故障更換", "【更換】內部線路嚴重短路燒毀更換", "【更換】固定基座變形有掉落危險更換"
+        ],
+        "開關／插座面板": [
+            "【更換】內部接點碳化具走火危險更換", "【更換】內部接點燒蝕無法啟閉通電更換"
+        ]
+    },
+    "門窗五金及裝修": {
+        "門片": [
+            "【維修】門片下垂歪斜校正調整", "【維修】鉸鏈螺絲鬆動重新固定", "【維修】門縫密合度公差調整",
+            "【更換】木質門板受潮膨脹嚴重變形無法閉合更換", "【更換】整體結構損壞無法鎖固安全更換"
+        ],
+        "紗窗": [
+            "【更換】紗網大面積破裂更換", "【更換】外框嚴重扭曲變形無法安裝更換", "【更換】導輪磨損碎裂更換整組"
+        ],
+        "水平把手鎖": [
+            "【維修】把手下垂鬆動更換", "【維修】鎖舌連動桿卡住調整", "【維修】內部鎖夾機構維修",
+            "【更換】鎖體內部構造斷裂故障更換", "【更換】把手斷裂脫落更換", "【更換】連動結構嚴重磨損無法扣合更換"
+        ],
+        "喇叭鎖": [
+            "【更換】鎖心內部組件損壞更換", "【更換】內部機構磨損卡死更換", "【更換】鎖舌卡住無法正常開啟更換"
+        ],
+        "窗戶": [
+            "【維修】氣密隔音條鬆脫更換", "【維修】氣密窗外推油壓撐桿阻尼更換",
+            "【更換】窗戶玻璃因破裂更換", "【更換】鋁合金窗框因變形更換", "【更換】連動五金結構斷裂無法鎖閉更換"
+        ],
+        "窗簾": [
+            "【維修】軌道滑輪脫軌更換",
+            "【更換】簾布脆化破損更換", "【更換】捲簾內部捲簧機構疲乏故障更換", "【更換】鋁合金軌道受損變形無法滑動更換"
+        ],
+        "陽台曬衣架": [
+            "【更換】手搖器內部齒輪打滑無法制動更換", "【更換】升降鋼索鏽蝕/斷裂更換", "【更換】曬衣主桿嚴重變形/斷裂更換"
+        ],
+        "牆面": [
+            "【更換】大面積壁癌重新粉刷施作"
+        ]
+    },
+    "衛浴及給排水設備": {
+        "洗臉盆": [
+            "【維修】落水頭拉桿卡阻更換", "【維修】盆底金屬固定支架螺栓生鏽更換", "【維修】排水管防臭墊圈老化滲漏更換",
+            "【更換】盆體外觀龜裂破損更換"
+        ],
+        "淋浴龍頭/水龍頭": [
+            "【維修】冷熱混合切換拉鈕卡阻更換", "【維修】後方進水凡爾滲漏更換",
+            "【更換】龍頭裂損滲水更換", "【更換】內部冷熱混和瓷心故障更換", "【更換】外觀鏽蝕更換"
+        ],
+        "馬桶": [
+            "【更換】外觀龜裂滲漏更換", "【更換】底座嚴重裂損具承重危險更換"
+        ],
+        "馬桶水箱": [
+            "【維修】落水止水皮老化漏水更換", "【維修】進水浮球閥卡阻維修", "【維修】水箱沖水按鈕鍊條鬆脫更換",
+            "【更換】水箱瓷體產生細紋滲水更換", "【更換】內部進水總成脆裂/損壞更換"
+        ],
+        "進水軟管": [
+            "【更換】進水軟管斷裂爆管更換", "【更換】橡膠內管老化硬化脆裂噴水更換"
+        ],
+        "排水管": [
+            "【更換】S/P管破損更換"
+        ],
+        "提籠": [
+            "【更換】提籠鏽蝕穿孔漏水更換"
+        ],
+        "水塔": [
+            "【維修】液位浮球閥移位卡阻調整", "【維修】水塔進出水由令接頭微漏修復",
+            "【更換】不銹鋼塔體鏽蝕穿孔漏水更換", "【更換】水塔支撐腳架嚴重生鏽鏽斷更換", "【更換】塔身嚴重凹陷變形更換"
+        ]
+    },
+    "消防安全設備": {
+        "滅火器": [
+            "【添購】添購合格乾粉滅火器設備"
+        ],
+        "煙霧偵測器（煙偵器）": [
+            "【添購】添購住宅用獨立式煙霧偵測器"
+        ]
+    }
+};
+
+function populateRepairItems() {
+    const cat = document.getElementById('repairCategorySelect').value;
+    const itemSelect = document.getElementById('repairItemSelect');
+    itemSelect.innerHTML = '<option value="">-- 請選擇設備項目 --</option>';
+    if (!cat || !repairDatabase[cat]) return;
+    Object.keys(repairDatabase[cat]).forEach(item => {
+        let opt = document.createElement('option'); opt.value = item; opt.innerText = item; itemSelect.appendChild(opt);
+    });
+    populateRepairReasons();
+}
+
+function populateRepairReasons() {
+    const cat = document.getElementById('repairCategorySelect').value;
+    const item = document.getElementById('repairItemSelect').value;
+    const container = document.getElementById('repairTagsContainer');
+    container.innerHTML = "";
+    if (!cat || !item || !repairDatabase[cat][item]) return;
+    repairDatabase[cat][item].forEach(reason => {
+        let span = document.createElement('span');
+        span.className = 'repair-pill';
+        span.innerText = reason;
+        span.onclick = () => selectRepairText(`【${item}】` + reason);
+        container.appendChild(span);
+    });
+}
+
+function searchRepairReason() {
+    const kw = document.getElementById('repairKeywordInput').value.trim().toLowerCase();
+    const container = document.getElementById('repairTagsContainer');
+    container.innerHTML = "";
+    if (!kw) return;
+    let count = 0;
+    for (let cat in repairDatabase) {
+        for (let item in repairDatabase[cat]) {
+            repairDatabase[cat][item].forEach(reason => {
+                if (item.toLowerCase().includes(kw) || reason.toLowerCase().includes(kw)) {
+                    if (count < 12) {
+                        let span = document.createElement('span');
+                        span.className = 'repair-pill';
+                        span.innerText = `[${item}] ${reason}`;
+                        span.onclick = () => selectRepairText(`【${item}】` + reason);
+                        container.appendChild(span);
+                        count++;
+                    }
+                }
+            });
+        }
+    }
+}
+
+function selectRepairText(text) {
+    const ta = document.getElementById('repairResultText');
+    if (ta.value) ta.value += "\n" + text;
+    else ta.value = text;
+}
+
+function copyRepairText() {
+    const t = document.getElementById('repairResultText').value;
+    if (!t) { alert("尚未產製任何修繕說明！"); return; }
+    navigator.clipboard.writeText(t).then(() => alert("📋 修繕專業說明已複製至剪貼簿！"));
+}
+
+// ------------------ 土地持分試算模組 (200+ 筆) ------------------
+let landRowCounter = 0;
+
+function addBatchLandRows(count = 50) {
+    const tbody = document.getElementById('landTableBody');
+    for (let i = 0; i < count; i++) {
+        landRowCounter++;
+        let tr = document.createElement('tr');
+        tr.id = `land_row_${landRowCounter}`;
+        tr.innerHTML = `
+            <td style="color:#64748b; font-weight:bold;">${landRowCounter}</td>
+            <td><input type="text" class="land-num-input" placeholder="地號 (如：xx段xx地號)"></td>
+            <td><input type="number" class="land-val-input" value="0" oninput="calcSingleLandRow(${landRowCounter})"></td>
+            <td><input type="number" class="land-own-input" value="1" min="1" oninput="calcSingleLandRow(${landRowCounter})"></td>
+            <td><input type="number" class="land-act-input" value="0" oninput="calcLandTotals()"></td>
+        `;
+        tbody.appendChild(tr);
+    }
+    calcLandTotals();
+}
+
+function calcSingleLandRow(idx) {
+    const row = document.getElementById(`land_row_${idx}`);
+    if (!row) return;
+    const org = parseFloat(row.querySelector('.land-val-input').value) || 0;
+    const owners = Math.max(1, parseFloat(row.querySelector('.land-own-input').value) || 1);
+    const act = Math.round(org / owners);
+    row.querySelector('.land-act-input').value = act;
+    calcLandTotals();
+}
+
+function calcLandTotals() {
+    let count = 0, totalOrg = 0, totalAct = 0;
+    const rows = document.querySelectorAll('#landTableBody tr');
+    rows.forEach(r => {
+        const val = parseFloat(r.querySelector('.land-val-input').value) || 0;
+        const act = parseFloat(r.querySelector('.land-act-input').value) || 0;
+        if (val > 0 || act > 0) count++;
+        totalOrg += val;
+        totalAct += act;
+    });
+
+    document.getElementById('landCountDisplay').innerText = count;
+    document.getElementById('landTotalOrgDisplay').innerText = Math.round(totalOrg).toLocaleString();
+    document.getElementById('landTotalActDisplay').innerText = Math.round(totalAct).toLocaleString();
+
+    const alertBox = document.getElementById('landAlertBox');
+    const warnText = document.getElementById('landWarningText');
+    if (totalAct > 7050000) {
+        alertBox.className = "land-summary-card land-alert-danger";
+        warnText.style.display = "block";
+    } else {
+        alertBox.className = "land-summary-card land-alert-ok";
+        warnText.style.display = "none";
+    }
+
+    syncLandPage4Mirror(count, totalOrg, totalAct);
+}
+
+function clearAllLandRows() {
+    if (confirm("確定要清空所有土地明細清冊？")) {
+        document.getElementById('landTableBody').innerHTML = "";
+        landRowCounter = 0;
+        addBatchLandRows(30);
+    }
+}
+
+function applyLandTotalToApplicant() {
+    const totalAct = parseFloat(document.getElementById('landTotalActDisplay').innerText.replace(/,/g, '')) || 0;
+    const firstMember = document.querySelector("#familyContainer .member-card");
+    if (!firstMember) { alert("尚未建立承租人家庭成員卡片！"); return; }
+    const landInput = firstMember.querySelector('.land-wrapper input.item-val');
+    if (landInput) {
+        landInput.value = totalAct;
+        calculateAll();
+        alert(`已成功將承租人土地持分總額 NT$ ${totalAct.toLocaleString()} 元 帶入第 1 位申請人土地現值欄位！`);
+    }
+}
+
+function syncLandPage4Mirror(count, totalOrg, totalAct) {
+    const summaryMirror = document.getElementById('page4_summary_mirror');
+    summaryMirror.innerHTML = `
+        <strong>總核計筆數：</strong> ${count} 筆 &nbsp;|&nbsp; 
+        <strong>土地公告現值總額：</strong> ${Math.round(totalOrg).toLocaleString()} 元 &nbsp;|&nbsp; 
+        <strong>承租人持分總實際金額：</strong> <span style="font-size:1.15rem; color:${totalAct > 7050000 ? '#b91c1c' : '#15803d'}; font-weight:bold;">${Math.round(totalAct).toLocaleString()} 元</span>
+        ${totalAct > 7050000 ? '<span style="color:#b91c1c; font-weight:bold;"> (⚠️ 逾 705 萬限額)</span>' : ''}
+    `;
+
+    const tbodyMirror = document.getElementById('page4_tbody_mirror');
+    tbodyMirror.innerHTML = "";
+    const rows = document.querySelectorAll('#landTableBody tr');
+    let printedIndex = 0;
+    rows.forEach(r => {
+        const num = r.querySelector('.land-num-input').value.trim() || "-";
+        const org = parseFloat(r.querySelector('.land-val-input').value) || 0;
+        const own = r.querySelector('.land-own-input').value || "1";
+        const act = parseFloat(r.querySelector('.land-act-input').value) || 0;
+
+        // 列印只輸出有值的列
+        if (org > 0 || act > 0) {
+            printedIndex++;
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="border:1px solid #000; text-align:center;">${printedIndex}</td>
+                <td style="border:1px solid #000; text-align:left; padding:4px 8px;">${num}</td>
+                <td style="border:1px solid #000; text-align:right; padding:4px 8px;">${org.toLocaleString()}</td>
+                <td style="border:1px solid #000; text-align:center;">${own}</td>
+                <td style="border:1px solid #000; text-align:right; padding:4px 8px; font-weight:bold;">${act.toLocaleString()}</td>
+            `;
+            tbodyMirror.appendChild(tr);
+        }
+    });
+}
+
+// ------------------ 行政區與選單 ------------------
 function initDistricts() {
     const city = document.getElementById('city').value;
     const distSelect = document.getElementById('district');
@@ -417,12 +862,11 @@ function initDistricts() {
         ["草屯鎮", "南投市", "埔里鎮"].forEach(d => distSet.add(d));
     }
     
-    // 先把 masterData 中所有行政區塞進去（排除"其他"，後面再針對彰、投特別給予）
     Object.keys(masterData[city] || {}).forEach(d => {
         if (d !== "其他") distSet.add(d);
     });
     
-    // 【重點修正】：依據官方公告圖表，只有彰化縣跟南投縣的末尾會塞入「其他」
+    // 依官方規範：僅彰化與南投有「其他」
     if (city === "彰化縣" || city === "南投縣") {
         distSet.add("其他");
     }
@@ -436,10 +880,11 @@ function initDistricts() {
 }
 
 function syncCityAndCalc() { initDistricts(); calculateAll(); }
-function toggleDrawer() {
-    const d = document.getElementById('areaCalculator');
+
+function toggleDrawer(drawerId, arrowId) {
+    const d = document.getElementById(drawerId);
     d.style.display = (d.style.display === 'block') ? 'none' : 'block';
-    document.getElementById('drawerArrow').innerText = (d.style.display === 'block') ? '▲' : '▼';
+    if (arrowId) document.getElementById(arrowId).innerText = (d.style.display === 'block') ? '▲' : '▼';
 }
 
 function runAreaCalc() {
@@ -459,7 +904,7 @@ function runAreaCalc() {
 function applyArea() { 
     const calculatedPing = parseFloat(document.getElementById('outPing').innerText || 0);
     document.getElementById('area').value = calculatedPing.toFixed(2); 
-    toggleDrawer(); 
+    toggleDrawer('areaCalculator', 'drawerArrow'); 
     calculateAll(); 
 }
 
@@ -476,7 +921,7 @@ function calcAgeByDate() {
     }
 }
 
-// ------------------ 房客資料模組 ------------------
+// ------------------ 房客成員模組 ------------------
 let memberCounter = 0;
 
 function addFamilyMember() {
@@ -562,7 +1007,7 @@ function sumWrapper(card, wrapperClass) {
 
 let snapReport = {};
 
-// ------------------ 核心計算引擎與映射 ------------------
+// ------------------ 核心計算引擎 ------------------
 function calculateAll() {
     const city = document.getElementById('city').value;
     const dist = document.getElementById('district').value;
@@ -573,8 +1018,7 @@ function calculateAll() {
     const adjL = parseFloat(document.getElementById('adjLoc').value);
     const adjD = parseFloat(document.getElementById('adjDec').value);
 
-    // 完美防呆：桃園如果找不對行政區會退回原生保底「其他」，彰投則直接抓對應大括號
-    const priceList = (masterData[city] && masterData[city][dist]) ? masterData[city][dist][type] : masterData[city]["其他"][type];
+    const priceList = (masterData[city] && masterData[city][dist]) ? masterData[city][dist][type] : (masterData[city]["其他"] ? masterData[city]["其他"][type] : [375,370,360,355,345,335,325,310,295]);
     const basePrice = priceList[Math.min(8, Math.floor(age / 5))];
     const adjustedPrice = basePrice * (1 + adjL + adjD);
     
@@ -709,13 +1153,20 @@ function resetAllFields() {
     if(confirm("確定要清空目前畫面上所有的登打資料嗎？")) {
         document.getElementById('area').value = ""; document.getElementById('buildDate').value = ""; document.getElementById('age').value = "0"; document.getElementById('rent').value = ""; document.getElementById('adjLoc').value = "0"; document.getElementById('adjDec').value = "0";
         document.getElementById("mMain").value = "0"; document.getElementById("mBal").value = "0"; document.getElementById("mFlower").value = "0"; document.getElementById("mRain").value = "0"; document.getElementById("mPlat").value = "0"; document.getElementById("mOth").value = "0"; document.getElementById("mCar").value = "0";
-        document.getElementById("familyContainer").innerHTML = ""; memberCounter = 0; addFamilyMember(); runAreaCalc(); calculateAll();
+        document.getElementById("familyContainer").innerHTML = ""; memberCounter = 0; addFamilyMember();
+        clearAllLandRows();
+        document.getElementById('repairResultText').value = "";
+        runAreaCalc(); calculateAll();
     }
 }
 
 document.getElementById('today').innerText = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
 
-initDistricts(); addFamilyMember(); runAreaCalc(); calculateAll();
+initDistricts(); 
+addFamilyMember(); 
+addBatchLandRows(30); // 預載 30 筆土地表格
+runAreaCalc(); 
+calculateAll();
 </script>
 </body>
 </html>
