@@ -202,7 +202,7 @@
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="bottom-toolbar">
-    <button class="print-btn" onclick="window.print()">🖨️ 開始列印 (四分頁完整報表)</button>
+    <button class="print-btn" onclick="window.print()">🖨️ 開始列印 </button>
     <button class="reset-btn" onclick="resetAllFields()">🔄 清空重置所有欄位</button>
 </div>
 
@@ -214,7 +214,7 @@
             <!-- 工具區：修繕說明產製器 -->
             <div class="section" style="border-top-color: #eab308;">
                 <button class="drawer-btn repair-btn" onclick="toggleDrawer('repairHelper', 'repairArrow')">
-                    <span>🛠️ 實務工具：社宅家具家電修繕／發票工項活性化公文產製器</span><span id="repairArrow">▼</span>
+                    <span>🛠️ 實務工具：社宅家具家電修繕／發票工程人性化</span><span id="repairArrow">▼</span>
                 </button>
                 <div id="repairHelper">
                     <div style="font-size: 0.85rem; color: #713f12; margin-bottom: 8px;">
@@ -261,7 +261,7 @@
                     </div>
                     <div id="repairTagsContainer" style="margin-bottom: 10px;"></div>
                     <div class="repair-result-card">
-                        <label style="color:#854d0e; font-weight:bold;">產製之公文標準高雅說法（物品因…故需…）：</label>
+                        <label style="color:#854d0e; font-weight:bold;">產製高級大人說法（物品因…故需…）：</label>
                         <textarea id="repairResultText" placeholder="點選上方推薦標籤，即刻套用標準因果句型..."></textarea>
                         <div style="display:flex; justify-content:space-between; margin-top:5px;">
                             <button class="inner-add-btn" style="background:#ca8a04; color:white; padding:6px 14px; font-size:0.85rem;" onclick="copyRepairText()">📋 一鍵複製修繕說明</button>
@@ -276,7 +276,7 @@
                 <div class="section-title">第一部分：建物面積與租金評定</div>
                 
                 <button class="drawer-btn" onclick="toggleDrawer('areaCalculator', 'drawerArrow')">
-                    <span>衡量工具：謄本面積換算 (此區塊列印時自動獨立為第一頁)</span><span id="drawerArrow">▼</span>
+                    <span>衡量工具：謄本面積換算</span><span id="drawerArrow">▼</span>
                 </button>
                 
                 <div id="areaCalculator">
@@ -363,7 +363,7 @@
 
                 <!-- 土地大批量持分試算器折疊區 -->
                 <button class="drawer-btn land-btn" onclick="toggleDrawer('landCalculator', 'landArrow')">
-                    <span>🌾 實務工具：承租人共有土地持分大批量試算器 (200+筆清冊)</span><span id="landArrow">▼</span>
+                    <span>🌾 實務工具：承租人持有多筆共有土地試算器 (200+筆清冊)</span><span id="landArrow">▼</span>
                 </button>
                 <div id="landCalculator">
                     <div id="landAlertBox" class="land-summary-card land-alert-ok">
@@ -399,7 +399,7 @@
             </div>
         </div>
         
-        <!-- 右側即時結果面板 (網頁呈現) -->
+        <!-- 右側即時結果 -->
         <div class="result-side" id="webResultSide">
             <div class="result-sticky">
                 <div class="section" id="print_landlord_result" style="border-top: 4px solid var(--accent);">
@@ -448,7 +448,7 @@
     <!-- 列印專用第 4 頁：土地持分明細附件清冊 -->
     <div class="print-page4-land">
         <div class="section" style="border-top: 4px solid #16a34a;">
-            <div class="section-title">承租人共有土地持分明細附件清冊 (大批量審查專用)</div>
+            <div class="section-title">承租人共有土地持分明細附件清冊</div>
             <div id="page4_summary_mirror" class="land-summary-card" style="border:1px solid #000; margin-bottom:12px;"></div>
             <table class="calc-table" id="page4_table_mirror" style="width:100%; border-collapse:collapse;">
                 <thead>
