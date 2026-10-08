@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社會住宅綜合試算系統 鎮信/安東5.2</title>
+    <title>社會住宅綜合試算系統 鎮信/安東5.3</title>
     <style>
         :root { 
             --primary: #0d47a1; 
@@ -132,7 +132,7 @@
         .stamp.pass { color: var(--success-text); border-color: var(--success-text); }
         .stamp.fail { color: var(--danger-text); border-color: var(--danger-text); }
         
-        /* 列印優化樣式 */
+        /* 列印樣式 */
         @media print {
             html, body { background: white; color: #000; padding: 0; font-size: 10pt; }
             button, .drawer-btn, .add-btn, .bottom-toolbar, .delete-member-btn, .member-calc-hint, .inner-add-btn, .inner-del-btn, .copy-line-btn, .edu-hint, #repairHelper { display: none !important; }
@@ -198,7 +198,7 @@
 </head>
 <body>
 
-<h1 class="main-header">社會住宅包租代管綜合試算系統5.2</h1>
+<h1 class="main-header">社會住宅包租代管綜合試算系統5.3</h1>
 <div class="date-line">試算單位：鎮信/安東 &nbsp;|&nbsp; 試算日期：<span id="today"></span></div>
 
 <div class="bottom-toolbar">
@@ -211,28 +211,28 @@
         
         <!-- 左側主輸入流 -->
         <div class="input-flow">
-            <!-- 工具區：修繕高雅專業說明產製器 -->
+            <!-- 工具區：修繕說明產製器 -->
             <div class="section" style="border-top-color: #eab308;">
                 <button class="drawer-btn repair-btn" onclick="toggleDrawer('repairHelper', 'repairArrow')">
-                    <span>🛠️ 實務工具：社宅家具家電設備修繕／發票工項高雅專業說明產製器</span><span id="repairArrow">▼</span>
+                    <span>🛠️ 實務工具：社宅家具家電修繕／發票工項活性化公文產製器</span><span id="repairArrow">▼</span>
                 </button>
                 <div id="repairHelper">
                     <div style="font-size: 0.85rem; color: #713f12; margin-bottom: 8px;">
-                        💡 支援<strong>營建構造/界面</strong>（屋頂、外牆、天花板）、<strong>發票工項</strong>（磁磚更換、防水工程）與<strong>家電家具故障</strong>，智慧產出因果公文句型：
+                        💡 支援<strong>營建構造/界面</strong>（屋頂、輕鋼架、窗框）、<strong>各類口語諧音</strong>（地板彭共、蓮蓬頭、門軸、櫥櫃）與<strong>發票工項</strong>，智慧合成公文標準句型：
                     </div>
 
-                    <!-- 發票與建築工項快捷標籤 -->
+                    <!-- 熱門工項快捷標籤 -->
                     <div style="margin-bottom: 10px;">
                         <span style="font-size: 0.8rem; font-weight: bold; color: #854d0e;">熱門工項快捷：</span>
+                        <span class="quick-tag" onclick="quickFillRepair('浴室輕鋼架更換')">🏗️ 浴室輕鋼架</span>
+                        <span class="quick-tag" onclick="quickFillRepair('地板彭共')">🧱 地板彭共/膨拱</span>
+                        <span class="quick-tag" onclick="quickFillRepair('蓮蓬頭')">🚿 蓮蓬頭</span>
+                        <span class="quick-tag" onclick="quickFillRepair('門軸')">🚪 門軸/鉸鏈</span>
+                        <span class="quick-tag" onclick="quickFillRepair('櫥櫃')">🗄️ 櫥櫃受潮</span>
+                        <span class="quick-tag" onclick="quickFillRepair('窗框')">🪟 窗框變形</span>
                         <span class="quick-tag" onclick="quickFillRepair('屋頂')">🏢 屋頂修繕</span>
                         <span class="quick-tag" onclick="quickFillRepair('防水工程')">🏷️ 防水工程</span>
-                        <span class="quick-tag" onclick="quickFillRepair('磁磚更換')">🏷️ 磁磚更換</span>
-                        <span class="quick-tag" onclick="quickFillRepair('抓漏工程')">🏷️ 水管抓漏</span>
-                        <span class="quick-tag" onclick="quickFillRepair('油漆工程')">🏷️ 油漆粉刷</span>
                         <span class="quick-tag" onclick="quickFillRepair('馬桶堵塞')">🏷️ 馬桶堵塞</span>
-                        <span class="quick-tag" onclick="quickFillRepair('地板排水疏通')">🏷️ 地板排水疏通</span>
-                        <span class="quick-tag" onclick="quickFillRepair('冰箱不冷')">🏷️ 冰箱不冷</span>
-                        <span class="quick-tag" onclick="quickFillRepair('冷氣滴水')">🏷️ 冷氣滴水</span>
                     </div>
 
                     <div class="form-row">
@@ -240,11 +240,11 @@
                             <label>快速分類檢索</label>
                             <select id="repairCategorySelect" onchange="populateRepairItems()">
                                 <option value="">-- 請選擇設備或工程類別 --</option>
-                                <option value="泥作防水與基礎工程">★、泥作、防水與基礎工程（屋頂、磁磚、防水、抓漏）</option>
-                                <option value="給排水與管道工程">★、衛浴、給排水與疏通工程（馬桶、水管、通管）</option>
-                                <option value="家具設備">一、家具設備（沙發、衣櫃、床組等）</option>
+                                <option value="泥作防水與基礎工程">★、泥作、防水與基礎工程（屋頂、磁磚、防水、輕鋼架）</option>
+                                <option value="給排水與管道工程">★、衛浴、給排水與疏通工程（馬桶、蓮蓬頭、水管）</option>
+                                <option value="家具設備">一、家具設備（櫥櫃、沙發、衣櫃、床組等）</option>
                                 <option value="家電及機電設備">二、家電及機電（冷氣、冰箱、熱水器等）</option>
-                                <option value="門窗五金及裝修">三、門窗、五金及裝修（鎖具、門窗、壁癌）</option>
+                                <option value="門窗五金及裝修">三、門窗、五金及裝修（門軸、鎖具、窗框、壁癌）</option>
                                 <option value="消防安全設備">四、消防安全設備（滅火器、煙偵器）</option>
                             </select>
                         </div>
@@ -256,8 +256,8 @@
                         </div>
                     </div>
                     <div>
-                        <label>輸入發票工項／業務白話描述（自動區分建築構造 vs 機械設備）</label>
-                        <input type="text" id="repairKeywordInput" placeholder="直接打工項或白話，如：屋頂、磁磚更換、防水工程、馬桶堵塞、冰箱不冷" oninput="searchRepairReason()">
+                        <label>輸入發票工項／業務白話描述（支援別字、諧音與複合句解析）</label>
+                        <input type="text" id="repairKeywordInput" placeholder="直接打白話，如：浴室輕鋼架更換、蓮蓬頭、地板彭共、櫥櫃、門軸、窗框、屋頂" oninput="searchRepairReason()">
                     </div>
                     <div id="repairTagsContainer" style="margin-bottom: 10px;"></div>
                     <div class="repair-result-card">
@@ -389,16 +389,12 @@
                                     <th style="width:140px;">實際金額 (元)</th>
                                 </tr>
                             </thead>
-                            <tbody id="landTableBody">
-                                <!-- 動態渲染土地項目 -->
-                            </tbody>
+                            <tbody id="landTableBody"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <div id="familyContainer">
-                    <!-- JavaScript 動態生成卡片 -->
-                </div>
+                <div id="familyContainer"></div>
                 <button class="add-btn" onclick="addFamilyMember()">➕ 新增家庭成員 / 共同承租人</button>
             </div>
         </div>
@@ -432,7 +428,7 @@
         </div>
     </div> 
     
-    <!-- 🖨️ 列印專用隱藏分頁鏡像 -->
+    <!-- 列印專用隱藏分頁鏡像 -->
     <div class="print-page2-rent">
         <div class="section" style="border-top: 4px solid var(--accent);">
             <div class="section-title">第一部分補件：房東建物租金審查試算表</div>
@@ -449,7 +445,7 @@
         </div>
     </div>
 
-    <!-- 🖨️ 列印專用第 4 頁：土地持分明細附件清冊 -->
+    <!-- 列印專用第 4 頁：土地持分明細附件清冊 -->
     <div class="print-page4-land">
         <div class="section" style="border-top: 4px solid #16a34a;">
             <div class="section-title">承租人共有土地持分明細附件清冊 (大批量審查專用)</div>
@@ -473,7 +469,7 @@
 <div id="stamp" class="stamp"></div>
 
 <script>
-// 114 年租金區間表資料庫：桃園市 13 區無「其他」；彰投保留「其他」
+// 114 年租金區間表資料庫
 const masterData = {
     "桃園市": {
         "桃園區": { "整層": [780,770,755,735,720,700,680,650,620], "套房": [1120,1100,1080,1055,1025,1000,970,930,885] },
@@ -537,103 +533,73 @@ const masterData = {
     }
 };
 
-// ------------------ 結構化修繕與發票工項字典庫 (納入營建構造本體庫) ------------------
+// ------------------ 活性化修繕字典庫 (納入積木拆解與同義詞雷達) ------------------
 const repairItemsMaster = [
-    // ★、泥作、防水、屋頂與建築構造 (營建構造介面全面升級)
-    { cat: "泥作防水與基礎工程", item: "屋頂平台", reason: "原防水層受氣候長期風化劣化龜裂致陰濕滲水", act: "刨除地坪並重新施作全區抗滲防水工程", type: "工程", kw: ["屋頂", "頂樓", "屋頂漏水", "頂樓漏水", "露台", "女兒牆"] },
+    // 建築構造/輕鋼架/磁磚/屋頂
+    { cat: "泥作防水與基礎工程", item: "浴室輕鋼架天花板", reason: "長期受水氣潮氣侵蝕氧化鏽蝕且板材受潮變形下陷", act: "拆除並重新安裝抗潮輕鋼架天花板工程", type: "工程", kw: ["浴室輕鋼架", "輕鋼架更換", "輕鋼架天花板", "輕鋼架", "明架", "矽酸鈣板", "天花板下陷"] },
+    { cat: "泥作防水與基礎工程", item: "室內地磚/磁磚", reason: "黏結層老化受溫差熱脹冷縮空心膨拱具破裂割傷危險", act: "剔除空心膨拱區域並重新鋪貼地磚工程", type: "工程", kw: ["地板彭共", "地板膨拱", "彭共", "澎拱", "空心", "地磚更換", "磁磚更換", "磁磚空心", "地磚破裂"] },
+    { cat: "泥作防水與基礎工程", item: "屋頂平台", reason: "原抗滲防水層長年日曬雨淋風化劣化致陰濕滲漏", act: "刨除舊層並施作全區無縫抗滲防水塗層工程", type: "工程", kw: ["屋頂", "頂樓", "屋頂漏水", "頂樓漏水", "露台防水", "女兒牆"] },
     { cat: "泥作防水與基礎工程", item: "屋頂浪板", reason: "金屬浪板受氣候長期風化鏽蝕穿孔排水不良", act: "拆除換新防鏽浪板並噴塗隔熱塗料工程", type: "工程", kw: ["屋頂鐵皮", "鐵皮屋頂", "浪板", "屋頂生鏽", "屋頂破洞"] },
-    { cat: "泥作防水與基礎工程", item: "屋頂落水頭", reason: "落水頭老化阻塞且周邊防水水泥微裂滲漏", act: "重作管邊防水止水層並更換高抗阻落水頭", type: "工程", kw: ["屋頂排水", "頂樓積水", "落水頭"] },
     { cat: "泥作防水與基礎工程", item: "外牆面", reason: "迎風面水泥外牆微細裂縫產生毛細吸水滲入室內", act: "施作高滲透抗裂抗候防水塗層工程", type: "工程", kw: ["外牆", "外牆漏水", "迎風面", "外牆滲水"] },
-    { cat: "泥作防水與基礎工程", item: "室內天花板", reason: "上方結構層受潮致泥作崩裂膨拱剝落具掉落危險", act: "剔除鬆動基底並施作阻水加固批土粉刷工程", type: "工程", kw: ["天花板", "天花板掉漆", "天花板漏水", "天花板水泥掉落"] },
-    { cat: "泥作防水與基礎工程", item: "磁磚更換", reason: "黏結層老化膨拱空心龜裂具掉落割傷危險", act: "敲除重新鋪貼更換磁磚", type: "工程", kw: ["磁磚更換", "地磚更換", "壁磚修補", "磁磚修補", "膨拱", "空心", "地磚破裂", "磁磚"] },
     { cat: "泥作防水與基礎工程", item: "防水工程", reason: "浴廁及迎風面外牆原抗滲層老化失效致滲水受潮", act: "施作全區無縫抗滲防水塗層工程", type: "工程", kw: ["防水工程", "抓漏工程", "做防水", "浴室防水", "頂樓防水", "抓漏", "防水"] },
     { cat: "泥作防水與基礎工程", item: "水管抓漏工程", reason: "暗埋給水管路日久微裂滲漏致樓板陰濕", act: "進行管路測漏定位開鑿換新修復", type: "工程", kw: ["抓漏", "暗管漏水", "水管抓漏", "測漏", "水管漏水"] },
     { cat: "泥作防水與基礎工程", item: "油漆粉刷工程", reason: "室內牆面漆層長期受潮粉化起泡脫落", act: "批土整平後塗刷抗霉乳膠面漆", type: "工程", kw: ["油漆工程", "油漆粉刷", "重新油漆", "掉漆", "批土", "粉刷", "油漆"] },
     { cat: "泥作防水與基礎工程", item: "矽利康工程", reason: "衛浴浴缸及窗框周邊矽利康發霉脆化失效", act: "刮除重新填縫施打防霉矽利康", type: "工程", kw: ["打矽利康", "矽利康發霉", "填縫老化", "窗框滲水", "矽利康"] },
-    { cat: "泥作防水與基礎工程", item: "水電配管配線工程", reason: "電氣線路負載老化絕緣外皮脆化具走火疑慮", act: "抽換安全合格電纜線路並整修配管", type: "工程", kw: ["水電工程", "配線", "配管", "換電線", "水電修繕", "線路"] },
 
-    // ★、衛浴、給排水與疏通工程 (補足通管、排水)
+    // 衛浴給排水/蓮蓬頭/疏通
+    { cat: "給排水與管道工程", item: "衛浴蓮蓬頭設備", reason: "出水噴孔嚴重鈣化積垢阻塞且軟管老化脆裂滲水", act: "更換新品增壓花灑軟管總成", type: "更換", kw: ["蓮蓬頭", "花灑", "蓮蓬頭漏水", "蓮蓬頭阻塞", "水管破掉", "蓮蓬頭軟管"] },
     { cat: "給排水與管道工程", item: "馬桶堵塞", reason: "排污管路異物沉積造成排污迴流受阻", act: "進行專用機具管道高壓疏通作業", type: "維修", kw: ["馬桶堵塞", "馬桶不通", "馬桶堵住", "通馬桶", "馬桶塞住"] },
     { cat: "給排水與管道工程", item: "地板排水疏通", reason: "地面落水頭內部毛髮油垢淤積致排水回冒", act: "進行深層管路毛髮淤積疏通清理", type: "維修", kw: ["地板排水疏通", "地上積水", "排水不通", "通水管", "水管不通", "浴室積水", "排水孔"] },
     { cat: "給排水與管道工程", item: "馬桶水箱", reason: "落水止水皮老化滲透漏水", act: "更換止水另件維修", type: "維修", kw: ["水一直流", "漏水", "水箱漏水", "抽水不止"] },
-    { cat: "給排水與管道工程", item: "馬桶水箱", reason: "水箱瓷體產生細紋滲水且進水總成脆裂", act: "更換新品設備", type: "更換", kw: ["水箱破掉", "外漏", "裂痕", "地上積水"] },
-    { cat: "給排水與管道工程", item: "馬桶", reason: "外觀龜裂滲漏具承重危險", act: "更換新品馬桶", type: "更換", kw: ["馬桶裂開", "漏水", "怕坐破", "底座搖晃"] },
     { cat: "給排水與管道工程", item: "淋浴水龍頭", reason: "內部冷熱混合瓷心故障裂損滲水", act: "更換新品水龍頭", type: "更換", kw: ["水龍頭滴水", "關不緊", "漏水", "冷熱水切不過去"] },
-    { cat: "給排水與管道工程", item: "洗臉盆", reason: "盆體外觀龜裂破損", act: "更換新品臉盆", type: "更換", kw: ["洗手台裂開", "快掉下來", "漏水"] },
-    { cat: "給排水與管道工程", item: "進水軟管", reason: "橡膠內管老化硬化脆裂爆管滲水", act: "更換新品高壓軟管", type: "更換", kw: ["爆管", "噴水", "軟管漏水", "淹水"] },
-    { cat: "給排水與管道工程", item: "排水管", reason: "S/P排水分管破損漏水", act: "更換新品排水管", type: "更換", kw: ["下面漏水", "排水管破掉", "臭氣"] },
-    { cat: "給排水與管道工程", item: "水塔", reason: "不銹鋼塔體鏽蝕穿孔漏水", act: "更換新品水塔", type: "更換", kw: ["頂樓漏水", "水塔破洞", "沒水"] },
 
-    // 家具設備
-    { cat: "家具設備", item: "鞋櫃", reason: "門片鉸鏈鬆動", act: "更換鉸鏈維修", type: "維修", kw: ["開關不順", "門下垂", "鬆動"] },
-    { cat: "家具設備", item: "鞋櫃", reason: "抽屜滑軌故障", act: "更換滑軌維修", type: "維修", kw: ["卡住", "拉不開", "脫軌"] },
-    { cat: "家具設備", item: "鞋櫃", reason: "板材受潮膨脹變形", act: "更換新品", type: "更換", kw: ["發霉", "膨脹", "泡水", "爛掉"] },
-    { cat: "家具設備", item: "梳妝台", reason: "櫃體結構損壞無法承重", act: "更換新品", type: "更換", kw: ["快塌了", "斷掉"] },
+    // 家具設備/櫥櫃
+    { cat: "家具設備", item: "室內櫥櫃/流理台", reason: "櫃體板材受潮膨脹變質且五金脫落結構受損無法正常使用", act: "檢修五金結構並更換受損櫥櫃櫃體", type: "更換", kw: ["櫥櫃", "廚櫃", "流理台", "系統櫃", "櫃子受潮", "碗盤櫃", "洗碗槽下受潮"] },
+    { cat: "家具設備", item: "鞋櫃", reason: "門片鉸鏈鬆動且抽屜滑軌脫軌", act: "更換五金配件維修", type: "維修", kw: ["開關不順", "門下垂", "鬆動", "卡住"] },
     { cat: "家具設備", item: "衣櫃", reason: "整體結構鬆動傾斜影響安全", act: "更換新品", type: "更換", kw: ["傾斜", "搖晃", "危險"] },
-    { cat: "家具設備", item: "床墊", reason: "內部彈簧疲乏凹陷", act: "更換新品", type: "更換", kw: ["凹下去", "睡得腰酸", "塌陷"] },
-    { cat: "家具設備", item: "餐桌", reason: "桌面破裂且支撐結構斷裂傾塌", act: "更換新品", type: "更換", kw: ["桌面裂開", "腳斷掉", "晃動"] },
-    { cat: "家具設備", item: "床組", reason: "主結構與支撐腳斷裂有塌陷危險", act: "更換新品", type: "更換", kw: ["床腳斷了", "床架塌了", "搖晃"] },
-    { cat: "家具設備", item: "沙發", reason: "內部彈簧結構嚴重疲乏塌陷", act: "更換新品", type: "更換", kw: ["凹陷", "陷下去", "彈簧壞了"] },
-    { cat: "家具設備", item: "沙發", reason: "皮革大面積自然老化硬化脫皮", act: "更換新品", type: "更換", kw: ["脫皮", "掉屑", "皮破了", "龜裂"] },
+    { cat: "家具設備", item: "床墊", reason: "內部彈簧疲乏凹陷具安全疑慮", act: "更換新品", type: "更換", kw: ["凹下去", "睡得腰酸", "塌陷", "彈簧刺出"] },
+    { cat: "家具設備", item: "沙發", reason: "內部彈簧結構嚴重疲乏塌陷且皮革老化脫皮", act: "更換新品", type: "更換", kw: ["沙發凹陷", "陷下去", "彈簧壞了", "沙發脫皮", "皮破了"] },
+
+    // 門窗五金/門軸/窗框
+    { cat: "門窗五金及裝修", item: "門片鉸鏈（門軸）", reason: "長期承重磨損變形導致門扇下垂歪斜卡阻地面", act: "更換高承重鉸鏈五金並重新校正門扇固定", type: "維修", kw: ["門軸", "後鈕", "鉸鏈", "鉸鍊", "門下垂", "門磨地板", "門卡住", "門關不緊"] },
+    { cat: "門窗五金及裝修", item: "鋁合金窗框", reason: "窗框受長期外力或風化擠壓變形致無法完全密合閉鎖", act: "進行窗框校正修復並更換水密氣密膠條", type: "工程", kw: ["窗框", "窗戶變形", "鋁門窗卡住", "窗戶關不上", "窗框漏水", "氣密條"] },
+    { cat: "門窗五金及裝修", item: "水平門鎖", reason: "鎖體內部連動構造斷裂磨損卡死無法扣合", act: "更換新品鎖具設備", type: "更換", kw: ["開不了", "鎖不上", "把手斷了", "轉不動", "反鎖", "門鎖"] },
+    { cat: "門窗五金及裝修", item: "紗窗", reason: "紗網大面積破裂且外框扭曲變形", act: "更換整組", type: "更換", kw: ["破洞", "蚊子飛進來", "掉下來"] },
+    { cat: "門窗五金及裝修", item: "牆面壁癌", reason: "結構滲水致大面積壁癌與漆面剝落", act: "重新批土抗滲粉刷施作", type: "更換", kw: ["掉漆", "壁癌", "漏水", "發霉", "掉粉"] },
 
     // 家電及機電設備
-    { cat: "家電及機電設備", item: "冰箱", reason: "製冷功能失效（完全不冷）", act: "更換設備", type: "更換", kw: ["不冷", "不會涼", "退冰", "壞掉", "不冰"] },
-    { cat: "家電及機電設備", item: "冰箱", reason: "溫控系統異常", act: "更換另件維修", type: "維修", kw: ["不夠冷", "太冷", "結霜", "溫度不對"] },
-    { cat: "家電及機電設備", item: "冰箱", reason: "門體封條老化滲透冷氣", act: "更換新品封條", type: "維修", kw: ["門關不緊", "漏氣", "發霉", "膠條破"] },
-    { cat: "家電及機電設備", item: "冰箱", reason: "壓縮機故障無法修復", act: "更換設備", type: "更換", kw: ["壓縮機不動", "很大聲", "完全不冷", "沒運轉"] },
-    { cat: "家電及機電設備", item: "冰箱", reason: "管線冷媒洩漏無法填補", act: "更換設備", type: "更換", kw: ["漏冷媒", "漏氣", "不冷"] },
-    { cat: "家電及機電設備", item: "冷氣", reason: "冷媒不足", act: "補充冷媒維護", type: "維修", kw: ["不冷", "吹熱風", "不涼", "微涼"] },
-    { cat: "家電及機電設備", item: "冷氣", reason: "排水管阻塞", act: "疏通排水維修", type: "維修", kw: ["滴水", "漏水", "室內漏水", "噴水"] },
-    { cat: "家電及機電設備", item: "冷氣", reason: "壓縮機故障停轉", act: "更換設備", type: "更換", kw: ["壓縮機壞了", "完全不冷", "吹熱風", "跳電"] },
-    { cat: "家電及機電設備", item: "洗衣機", reason: "進水電磁閥異常", act: "更換另件維修", type: "維修", kw: ["不進水", "一直流水", "漏水"] },
-    { cat: "家電及機電設備", item: "洗衣機", reason: "驅動馬達燒毀停轉", act: "更換設備", type: "更換", kw: ["不會動", "焦味", "不動", "冒煙"] },
-    { cat: "家電及機電設備", item: "熱水器", reason: "點火裝置異常", act: "維修更換另件", type: "維修", kw: ["點不著", "沒熱水", "洗冷水", "忽冷忽熱"] },
-    { cat: "家電及機電設備", item: "熱水器", reason: "安全洩壓裝置失效", act: "更換設備", type: "更換", kw: ["漏水", "超壓", "很危險", "滴水"] },
-    { cat: "家電及機電設備", item: "瓦斯爐", reason: "電子點火裝置受潮異常", act: "清理維修", type: "維修", kw: ["點不著", "沒有火", "卡嗒卡嗒"] },
-    { cat: "家電及機電設備", item: "開關面板", reason: "內部接點碳化燒蝕具走火危險", act: "更換新品面板", type: "更換", kw: ["沒電", "黑黑的", "燒焦", "鬆掉", "冒火花"] },
+    { cat: "家電及機電設備", item: "冰箱", reason: "壓縮機故障停轉致製冷功能完全失效", act: "更換設備", type: "更換", kw: ["冰箱不冷", "不會涼", "退冰", "壞掉", "不冰", "不冷"] },
+    { cat: "家電及機電設備", item: "冷氣", reason: "排水管阻塞致室內滲水滴漏", act: "疏通排水管線維修", type: "維修", kw: ["冷氣滴水", "冷氣漏水", "滴水", "漏水"] },
+    { cat: "家電及機電設備", item: "冷氣", reason: "冷媒不足且壓縮機運轉效能衰退", act: "補充冷媒並檢修線路", type: "維修", kw: ["冷氣不冷", "吹熱風", "不涼"] },
+    { cat: "家電及機電設備", item: "洗衣機", reason: "傳動皮帶鬆脫且驅動馬達異常", act: "更換皮帶及另件維修", type: "維修", kw: ["洗衣機不轉", "不會動", "脫水異音"] },
+    { cat: "家電及機電設備", item: "熱水器", reason: "電子點火裝置異常無法正常啟閉加熱", act: "維修更換另件", type: "維修", kw: ["點不著", "沒熱水", "洗冷水", "忽冷忽熱"] },
 
-    // 門窗、五金及裝修
-    { cat: "門窗五金及裝修", item: "門片", reason: "木質門板受潮膨脹嚴重變形無法閉合", act: "更換新品", type: "更換", kw: ["關不起來", "卡住", "關不上", "受潮", "磨地板"] },
-    { cat: "門窗五金及裝修", item: "水平鎖", reason: "鎖體內部構造斷裂故障無法扣合", act: "更換新品鎖具", type: "更換", kw: ["開不了", "鎖不上", "把手斷了", "轉不動", "反鎖"] },
-    { cat: "門窗五金及裝修", item: "窗戶", reason: "連動五金結構斷裂無法鎖閉且玻璃破損", act: "更換修復", type: "更換", kw: ["關不起來", "風吹很大聲", "玻璃破掉"] },
-    { cat: "門窗五金及裝修", item: "紗窗", reason: "紗網大面積破裂且外框扭曲變形", act: "更換整組", type: "更換", kw: ["破洞", "蚊子飛進來", "掉下來"] },
-    { cat: "門窗五金及裝修", item: "陽台曬衣架", reason: "升降鋼索鏽蝕斷裂且手搖器齒輪打滑", act: "更換新品", type: "更換", kw: ["升不上去", "掉下來", "線斷了", "搖不動"] },
-    { cat: "門窗五金及裝修", item: "牆面壁癌", reason: "大面積壁癌與漆面剝落", act: "重新批土抗滲粉刷施作", type: "更換", kw: ["掉漆", "壁癌", "漏水", "發霉", "掉粉"] },
-
-    // 消防安全設備
-    { cat: "消防安全設備", item: "滅火器", reason: "原有滅火器已逾有效期限或配備不足", act: "添購合格乾粉滅火器設備", type: "添購", kw: ["過期", "沒有滅火器", "安檢", "不夠"] },
-    { cat: "消防安全設備", item: "煙霧偵測器", reason: "居室未設置消防警報設備或原有設備失效", act: "添購住宅用獨立式煙霧偵測器", type: "添購", kw: ["沒煙偵器", "警報器", "消防檢查", "住警器"] }
+    // 消防安全
+    { cat: "消防安全設備", item: "滅火器", reason: "原有設備已逾有效年限或現場未配備合格設備", act: "添購合格乾粉滅火器設備", type: "添購", kw: ["滅火器", "過期", "消防檢查", "安檢"] },
+    { cat: "消防安全設備", item: "煙霧偵測器", reason: "居室未設置消防警報設備或原有偵測器失效", act: "添購住宅用獨立式煙霧偵測器", type: "添購", kw: ["煙霧偵測器", "煙偵器", "住警器", "警報器"] }
 ];
 
-// 口語擴充映射字典 (白話對照)
+// 同義詞與口語雷達映射庫
 const colloquialMap = {
-    "屋頂": ["原防水層受氣候長期風化劣化龜裂致陰濕滲水", "金屬浪板受氣候長期風化鏽蝕穿孔排水不良"],
-    "頂樓": ["原防水層受氣候長期風化劣化龜裂致陰濕滲水", "金屬浪板受氣候長期風化鏽蝕穿孔排水不良"],
-    "露台": ["原防水層受氣候長期風化劣化龜裂致陰濕滲水"],
-    "天花板": ["上方結構層受潮致泥作崩裂膨拱剝落具掉落危險"],
-    "外牆": ["迎風面水泥外牆微細裂縫產生毛細吸水滲入室內"],
-    "不冷": ["製冷功能失效", "冷媒不足", "壓縮機故障"],
-    "不冰": ["製冷功能失效", "冷媒不足", "溫控系統異常"],
-    "吹熱風": ["冷媒不足", "壓縮機故障", "製冷功能失效"],
-    "漏水": ["排水管阻塞", "止水皮老化", "滲漏", "龜裂滲漏", "爆管", "穿孔漏水", "原抗滲層老化失效致滲水受潮"],
-    "滴水": ["排水管阻塞", "止水皮老化", "滲漏", "冷熱混合瓷心故障"],
-    "洗冷水": ["點火裝置異常", "沒熱水"],
-    "點不著": ["點火裝置異常", "電子點火裝置受潮"],
-    "堵塞": ["排污管路異物沉積造成排污迴流受阻", "落水頭內部毛髮油垢淤積致排水回冒"],
-    "不通": ["排污管路異物沉積造成排污迴流受阻", "落水頭內部毛髮油垢淤積致排水回冒"],
-    "疏通": ["排污管路異物沉積造成排污迴流受阻", "落水頭內部毛髮油垢淤積致排水回冒"],
-    "磁磚": ["黏結層老化膨拱空心龜裂具掉落割傷危險"],
-    "地磚": ["黏結層老化膨拱空心龜裂具掉落割傷危險"],
-    "防水": ["浴廁及迎風面外牆原抗滲層老化失效致滲水受潮"],
-    "抓漏": ["暗埋給水管路日久微裂滲漏致樓板陰濕"],
-    "打不開": ["鎖舌連動桿卡住", "鎖心內部機構磨損卡死", "變形無法閉合"],
-    "卡住": ["滑軌故障", "卡死", "連動桿卡住", "門板受潮膨脹"],
-    "很吵": ["馬達軸心傾斜", "風扇扇葉鬆動異音", "軸承磨損嚴重異音"],
-    "塌陷": ["疲乏凹陷", "彈簧結構嚴重疲乏塌陷", "斷裂傾塌"],
-    "脫皮": ["自然老化硬化脫皮"]
+    "彭共": ["黏結層老化受溫差熱脹冷縮空心膨拱具破裂割傷危險"],
+    "澎拱": ["黏結層老化受溫差熱脹冷縮空心膨拱具破裂割傷危險"],
+    "蓮蓬頭": ["出水噴孔嚴重鈣化積垢阻塞且軟管老化脆裂滲水"],
+    "花灑": ["出水噴孔嚴重鈣化積垢阻塞且軟管老化脆裂滲水"],
+    "櫥櫃": ["櫃體板材受潮膨脹變質且五金脫落結構受損無法正常使用"],
+    "廚櫃": ["櫃體板材受潮膨脹變質且五金脫落結構受損無法正常使用"],
+    "門軸": ["長期承重磨損變形導致門扇下垂歪斜卡阻地面"],
+    "後鈕": ["長期承重磨損變形導致門扇下垂歪斜卡阻地面"],
+    "鉸鏈": ["長期承重磨損變形導致門扇下垂歪斜卡阻地面"],
+    "輕鋼架": ["長期受水氣潮氣侵蝕氧化鏽蝕且板材受潮變形下陷"],
+    "窗框": ["窗框受長期外力或風化擠壓變形致無法完全密合閉鎖"],
+    "屋頂": ["原抗滲防水層長年日曬雨淋風化劣化致陰濕滲漏", "金屬浪板受氣候長期風化鏽蝕穿孔排水不良"],
+    "頂樓": ["原抗滲防水層長年日曬雨淋風化劣化致陰濕滲漏", "金屬浪板受氣候長期風化鏽蝕穿孔排水不良"],
+    "天花板": ["長期受水氣潮氣侵蝕氧化鏽蝕且板材受潮變形下陷", "上方結構層受潮致泥作崩裂膨拱剝落具掉落危險"],
+    "不冷": ["壓縮機故障停轉致製冷功能完全失效", "冷媒不足且壓縮機運轉效能衰退"],
+    "滴水": ["排水管阻塞致室內滲水滴漏", "內部冷熱混合瓷心故障裂損滲水"],
+    "堵塞": ["排污管路異物沉積造成排污迴流受阻", "地面落水頭內部毛髮油垢淤積致排水回冒"]
 };
 
-// 組合標準因果句型：〔物品〕因〔具體故障原因〕，故需〔維修／更換／添購／工程施作〕。
 function formatFormalStatement(item, reason, act) {
     return `${item}因${reason}，故需${act}。`;
 }
@@ -675,7 +641,7 @@ function populateRepairReasons() {
     });
 }
 
-// 智慧語意、發票品項與口語比對引擎（升級：區分建築構造 vs 設備器材，絕不套錯零組件）
+// 活性化搜尋與動態拼裝引擎
 function searchRepairReason() {
     const rawKw = document.getElementById('repairKeywordInput').value.trim();
     const container = document.getElementById('repairTagsContainer');
@@ -686,7 +652,7 @@ function searchRepairReason() {
     
     let expandedKeywords = [lowerKw];
     for (let slang in colloquialMap) {
-        if (lowerKw.includes(slang)) {
+        if (lowerKw.includes(slang.toLowerCase())) {
             expandedKeywords.push(...colloquialMap[slang]);
         }
     }
@@ -697,9 +663,9 @@ function searchRepairReason() {
         let score = 0;
         if (lowerKw.includes(obj.item.toLowerCase()) || obj.item.toLowerCase().includes(lowerKw)) score += 15;
         if (obj.reason.toLowerCase().includes(lowerKw)) score += 8;
-        if (obj.kw && obj.kw.some(k => lowerKw.includes(k.toLowerCase()) || k.toLowerCase().includes(lowerKw))) score += 10;
+        if (obj.kw && obj.kw.some(k => lowerKw.includes(k.toLowerCase()) || k.toLowerCase().includes(lowerKw))) score += 12;
         expandedKeywords.forEach(ek => {
-            if (obj.reason.toLowerCase().includes(ek.toLowerCase())) score += 5;
+            if (obj.reason.toLowerCase().includes(ek.toLowerCase())) score += 6;
         });
 
         if (score > 0) {
@@ -709,31 +675,40 @@ function searchRepairReason() {
 
     matchedList.sort((a, b) => b.score - a.score);
 
-    // 若詞庫無直接命中，啟動「實體屬性對位矩陣動態重組」（絕不出現土木建築換零件）
+    // 若未直接命中，觸發樂高積木三元組動態拼裝
     if (matchedList.length === 0) {
         let inferredItem = rawKw;
-        let inferredReason = "老舊劣化且效能受損具使用疑慮";
-        let inferredAct = "派工檢修更換零組件";
+        let inferredReason = "老舊風化且效能衰退受損具使用疑慮";
+        let inferredAct = "派工檢修並進行修復工程";
 
-        // 1. 建築構造介面判定（屋頂、頂樓、露台、天花板、外牆、地坪等）
-        if (rawKw.includes("屋頂") || rawKw.includes("頂樓") || rawKw.includes("露台") || rawKw.includes("外牆") || rawKw.includes("天花板") || rawKw.includes("陽台") || rawKw.includes("地坪") || rawKw.includes("牆面")) {
-            inferredReason = "抗滲防水層日久風化微裂致滲水受潮";
-            inferredAct = "施作結構抗裂抗滲防水加固工程";
-        }
-        // 2. 管路疏通與水電管道判定
-        else if (rawKw.includes("通") || rawKw.includes("堵") || rawKw.includes("塞") || rawKw.includes("水管") || rawKw.includes("管路") || rawKw.includes("落水")) {
-            inferredReason = "管道內部雜質油垢沉積排污受阻回冒";
-            inferredAct = "進行專業管路疏通清理作業";
-        }
-        // 3. 一般滲漏判定
-        else if (rawKw.includes("漏") || rawKw.includes("滴")) {
-            inferredReason = "密封墊圈老化或管件接頭微裂滲漏";
-            inferredAct = "進行管件檢測維修更新";
-        }
-        // 4. 損壞更新判定
-        else if (rawKw.includes("換") || rawKw.includes("壞") || rawKw.includes("破")) {
-            inferredReason = "主體組件嚴重耗損無法修復";
-            inferredAct = "辦理新品設備更換安裝";
+        if (rawKw.includes("輕鋼架") || rawKw.includes("天花板")) {
+            inferredItem = "輕鋼架天花板";
+            inferredReason = "長期受濕氣侵蝕氧化變形下陷";
+            inferredAct = "拆除重新鋪設抗潮板材天花板工程";
+        } else if (rawKw.includes("彭共") || rawKw.includes("澎拱") || rawKw.includes("磁磚") || rawKw.includes("地磚")) {
+            inferredItem = "地壁磁磚";
+            inferredReason = "黏結底層老化熱脹冷縮空心隆起彭共";
+            inferredAct = "敲除空心處並重新鋪設黏貼平整";
+        } else if (rawKw.includes("門軸") || rawKw.includes("後鈕") || rawKw.includes("鉸鏈")) {
+            inferredItem = "門片五金門軸鉸鏈";
+            inferredReason = "長期負載磨損變形致門扇下垂卡阻";
+            inferredAct = "更換高承重五金鉸鏈並校正門扇固定";
+        } else if (rawKw.includes("蓮蓬頭") || rawKw.includes("花灑")) {
+            inferredItem = "衛浴蓮蓬頭軟管";
+            inferredReason = "出水噴孔鈣化積垢阻塞且軟管龜裂滲漏";
+            inferredAct = "更換新品增壓花灑軟管總成";
+        } else if (rawKw.includes("櫥櫃") || rawKw.includes("廚櫃") || rawKw.includes("流理台")) {
+            inferredItem = "室內櫥櫃櫃體";
+            inferredReason = "木質板材受潮膨脹變形五金鬆脫";
+            inferredAct = "檢修五金配件並更換受損結構櫃體";
+        } else if (rawKw.includes("窗框")) {
+            inferredItem = "鋁合金窗框";
+            inferredReason = "日久擠壓風化變形無法緊密閉鎖";
+            inferredAct = "進行校正修復並更換水密氣密膠條";
+        } else if (rawKw.includes("屋頂") || rawKw.includes("頂樓")) {
+            inferredItem = "屋頂平台界面";
+            inferredReason = "抗滲防水層長年日曬風化微裂滲漏";
+            inferredAct = "施作結構抗裂抗滲防水塗層工程";
         }
 
         let dynamicSentence = formatFormalStatement(inferredItem, inferredReason, inferredAct);
@@ -768,11 +743,12 @@ function copyRepairText() {
     navigator.clipboard.writeText(t).then(() => alert("📋 修繕標準公文語句已複製至剪貼簿！"));
 }
 
-// ------------------ 土地持分試算模組 (200+ 筆) ------------------
+// 土地持分試算模組
 let landRowCounter = 0;
 
 function addBatchLandRows(count = 50) {
     const tbody = document.getElementById('landTableBody');
+    if (!tbody) return;
     for (let i = 0; i < count; i++) {
         landRowCounter++;
         let tr = document.createElement('tr');
@@ -810,18 +786,23 @@ function calcLandTotals() {
         totalAct += act;
     });
 
-    document.getElementById('landCountDisplay').innerText = count;
-    document.getElementById('landTotalOrgDisplay').innerText = Math.round(totalOrg).toLocaleString();
-    document.getElementById('landTotalActDisplay').innerText = Math.round(totalAct).toLocaleString();
+    const elCount = document.getElementById('landCountDisplay');
+    const elOrg = document.getElementById('landTotalOrgDisplay');
+    const elAct = document.getElementById('landTotalActDisplay');
+    if (elCount) elCount.innerText = count;
+    if (elOrg) elOrg.innerText = Math.round(totalOrg).toLocaleString();
+    if (elAct) elAct.innerText = Math.round(totalAct).toLocaleString();
 
     const alertBox = document.getElementById('landAlertBox');
     const warnText = document.getElementById('landWarningText');
-    if (totalAct > 7050000) {
-        alertBox.className = "land-summary-card land-alert-danger";
-        warnText.style.display = "block";
-    } else {
-        alertBox.className = "land-summary-card land-alert-ok";
-        warnText.style.display = "none";
+    if (alertBox && warnText) {
+        if (totalAct > 7050000) {
+            alertBox.className = "land-summary-card land-alert-danger";
+            warnText.style.display = "block";
+        } else {
+            alertBox.className = "land-summary-card land-alert-ok";
+            warnText.style.display = "none";
+        }
     }
 
     syncLandPage4Mirror(count, totalOrg, totalAct);
@@ -829,14 +810,16 @@ function calcLandTotals() {
 
 function clearAllLandRows() {
     if (confirm("確定要清空所有土地明細清冊？")) {
-        document.getElementById('landTableBody').innerHTML = "";
+        const tbody = document.getElementById('landTableBody');
+        if (tbody) tbody.innerHTML = "";
         landRowCounter = 0;
         addBatchLandRows(30);
     }
 }
 
 function applyLandTotalToApplicant() {
-    const totalAct = parseFloat(document.getElementById('landTotalActDisplay').innerText.replace(/,/g, '')) || 0;
+    const el = document.getElementById('landTotalActDisplay');
+    const totalAct = el ? (parseFloat(el.innerText.replace(/,/g, '')) || 0) : 0;
     const firstMember = document.querySelector("#familyContainer .member-card");
     if (!firstMember) { alert("尚未建立承租人家庭成員卡片！"); return; }
     const landInput = firstMember.querySelector('.land-wrapper input.item-val');
@@ -849,14 +832,17 @@ function applyLandTotalToApplicant() {
 
 function syncLandPage4Mirror(count, totalOrg, totalAct) {
     const summaryMirror = document.getElementById('page4_summary_mirror');
-    summaryMirror.innerHTML = `
-        <strong>總核計筆數：</strong> ${count} 筆 &nbsp;|&nbsp; 
-        <strong>土地公告現值總額：</strong> ${Math.round(totalOrg).toLocaleString()} 元 &nbsp;|&nbsp; 
-        <strong>承租人持分總實際金額：</strong> <span style="font-size:1.15rem; color:${totalAct > 7050000 ? '#b91c1c' : '#15803d'}; font-weight:bold;">${Math.round(totalAct).toLocaleString()} 元</span>
-        ${totalAct > 7050000 ? '<span style="color:#b91c1c; font-weight:bold;"> (⚠️ 逾 705 萬限額)</span>' : ''}
-    `;
+    if (summaryMirror) {
+        summaryMirror.innerHTML = `
+            <strong>總核計筆數：</strong> ${count} 筆 &nbsp;|&nbsp; 
+            <strong>土地公告現值總額：</strong> ${Math.round(totalOrg).toLocaleString()} 元 &nbsp;|&nbsp; 
+            <strong>承租人持分總實際金額：</strong> <span style="font-size:1.15rem; color:${totalAct > 7050000 ? '#b91c1c' : '#15803d'}; font-weight:bold;">${Math.round(totalAct).toLocaleString()} 元</span>
+            ${totalAct > 7050000 ? '<span style="color:#b91c1c; font-weight:bold;"> (⚠️ 逾 705 萬限額)</span>' : ''}
+        `;
+    }
 
     const tbodyMirror = document.getElementById('page4_tbody_mirror');
+    if (!tbodyMirror) return;
     tbodyMirror.innerHTML = "";
     const rows = document.querySelectorAll('#landTableBody tr');
     let printedIndex = 0;
@@ -881,7 +867,7 @@ function syncLandPage4Mirror(count, totalOrg, totalAct) {
     });
 }
 
-// ------------------ 行政區與選單 ------------------
+// 行政區與選單
 function initDistricts() {
     const city = document.getElementById('city').value;
     const distSelect = document.getElementById('district');
@@ -901,7 +887,6 @@ function initDistricts() {
         if (d !== "其他") distSet.add(d);
     });
     
-    // 依官方規範：僅彰化與南投有「其他」
     if (city === "彰化縣" || city === "南投縣") {
         distSet.add("其他");
     }
@@ -918,8 +903,12 @@ function syncCityAndCalc() { initDistricts(); calculateAll(); }
 
 function toggleDrawer(drawerId, arrowId) {
     const d = document.getElementById(drawerId);
+    if (!d) return;
     d.style.display = (d.style.display === 'block') ? 'none' : 'block';
-    if (arrowId) document.getElementById(arrowId).innerText = (d.style.display === 'block') ? '▲' : '▼';
+    if (arrowId) {
+        const ar = document.getElementById(arrowId);
+        if (ar) ar.innerText = (d.style.display === 'block') ? '▲' : '▼';
+    }
 }
 
 function runAreaCalc() {
@@ -956,7 +945,7 @@ function calcAgeByDate() {
     }
 }
 
-// ------------------ 房客成員模組 ------------------
+// 房客成員模組
 let memberCounter = 0;
 
 function addFamilyMember() {
@@ -1030,7 +1019,8 @@ function updateInterestSum(memberId) {
     if (!card) return;
     let sum = 0;
     card.querySelectorAll('.int-wrapper .item-val').forEach(i => sum += parseFloat(i.value) || 0);
-    document.getElementById("hint_interest_" + memberId).innerText = "本金總換算：" + Math.round(sum / 0.01035).toLocaleString() + " 元";
+    const hint = document.getElementById("hint_interest_" + memberId);
+    if (hint) hint.innerText = "本金總換算：" + Math.round(sum / 0.01035).toLocaleString() + " 元";
     calculateAll();
 }
 
@@ -1042,7 +1032,7 @@ function sumWrapper(card, wrapperClass) {
 
 let snapReport = {};
 
-// ------------------ 核心計算引擎 ------------------
+// 核心計算引擎
 function calculateAll() {
     const city = document.getElementById('city').value;
     const dist = document.getElementById('district').value;
@@ -1134,27 +1124,37 @@ function calculateAll() {
         finalStatus: casePassStatus
     };
 
-    // 同步分頁鏡像
-    document.getElementById('page2_inputs_mirror').innerHTML = document.getElementById('landlordCoreInputs').innerHTML;
-    document.querySelector('.print-page2-rent select[id="city"]').value = city;
-    document.querySelector('.print-page2-rent select[id="district"]').value = dist;
-    document.querySelector('.print-page2-rent input[id="area"]').value = area;
-    document.querySelector('.print-page2-rent select[id="caseType"]').value = type;
-    document.querySelector('.print-page2-rent input[id="buildDate"]').value = document.getElementById('buildDate').value;
-    document.querySelector('.print-page2-rent input[id="age"]').value = age;
-    document.querySelector('.print-page2-rent select[id="adjLoc"]').value = adjL;
-    document.querySelector('.print-page2-rent select[id="adjDec"]').value = adjD;
-    document.querySelector('.print-page2-rent input[id="rent"]').value = rent;
-    document.getElementById('page2_result_mirror').innerHTML = document.getElementById('print_landlord_result').innerHTML;
+    // 分頁鏡像同步
+    const p2Inputs = document.getElementById('page2_inputs_mirror');
+    const p2Result = document.getElementById('page2_result_mirror');
+    if (p2Inputs && p2Result) {
+        p2Inputs.innerHTML = document.getElementById('landlordCoreInputs').innerHTML;
+        const setVal = (sel, val) => { const el = document.querySelector(sel); if(el) el.value = val; };
+        setVal('.print-page2-rent select[id="city"]', city);
+        setVal('.print-page2-rent select[id="district"]', dist);
+        setVal('.print-page2-rent input[id="area"]', area);
+        setVal('.print-page2-rent select[id="caseType"]', type);
+        setVal('.print-page2-rent input[id="buildDate"]', document.getElementById('buildDate').value);
+        setVal('.print-page2-rent input[id="age"]', age);
+        setVal('.print-page2-rent select[id="adjLoc"]', adjL);
+        setVal('.print-page2-rent select[id="adjDec"]', adjD);
+        setVal('.print-page2-rent input[id="rent"]', rent);
+        p2Result.innerHTML = document.getElementById('print_landlord_result').innerHTML;
+    }
 
-    document.getElementById('page3_family_mirror').innerHTML = document.getElementById('familyContainer').innerHTML;
-    const origInputs = document.querySelectorAll('#familyContainer input');
-    const mirrorInputs = document.querySelectorAll('#page3_family_mirror input');
-    origInputs.forEach((inp, idx) => { if(mirrorInputs[idx]) mirrorInputs[idx].value = inp.value; });
-    document.getElementById('page3_result_mirror').innerHTML = document.getElementById('print_tenant_result').innerHTML;
+    const p3Family = document.getElementById('page3_family_mirror');
+    const p3Result = document.getElementById('page3_result_mirror');
+    if (p3Family && p3Result) {
+        p3Family.innerHTML = document.getElementById('familyContainer').innerHTML;
+        const origInputs = document.querySelectorAll('#familyContainer input');
+        const mirrorInputs = document.querySelectorAll('#page3_family_mirror input');
+        origInputs.forEach((inp, idx) => { if(mirrorInputs[idx]) mirrorInputs[idx].value = inp.value; });
+        p3Result.innerHTML = document.getElementById('print_tenant_result').innerHTML;
+    }
 }
 
 function showQualificationResult(element, ok, title, limit){
+    if (!element) return;
     element.innerHTML = ok
         ? `<div class="qualification-result pass">✓ ${title}符合標準</div>`
         : `<div class="qualification-result fail">✗ ${title}超標（上限 ${limit.toLocaleString()} 元）</div>`;
@@ -1195,13 +1195,15 @@ function resetAllFields() {
     }
 }
 
-document.getElementById('today').innerText = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
-
-initDistricts(); 
-addFamilyMember(); 
-addBatchLandRows(30); 
-runAreaCalc(); 
-calculateAll();
+// 頁面初始化
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('today').innerText = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
+    initDistricts(); 
+    addFamilyMember(); 
+    addBatchLandRows(30); 
+    runAreaCalc(); 
+    calculateAll();
+});
 </script>
 </body>
 </html>
